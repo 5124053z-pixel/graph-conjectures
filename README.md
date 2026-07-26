@@ -2096,6 +2096,42 @@ graph all five Hamiltonicity certificates correctly decline, and the in-range
 claims (`n ≤ 8`) were all literally true. The failure was entirely in not
 reading the source list.
 
+## Result: conjecture 145 is proved except for one shape
+
+> **WOWII 145.** *`2·ecc(B) ≤ tree(G)·lMin(Ḡ)`, `B` the periphery.*
+
+**98.6%** of it — 10,712 of the 10,860 applicable graphs on at most 8 vertices —
+and what is left is a single, fully described configuration.
+
+**If `lMin(Ḡ) ≥ 2`:** `tree·lMin ≥ 2·tree ≥ 2(diam+1) > 2·ecc(B)`, using
+`tree ≥ diam+1` and then `diam ≥ 1 + ecc(B)`. Holds outright.
+
+**If `lMin(Ḡ) = 1`:** the statement is just `2·ecc(B) ≤ tree`. Since
+`tree ≥ diam + 1 ≥ ecc(B) + 2`, it is enough that `2·ecc(B) ≤ ecc(B) + 2`, i.e.
+**`ecc(B) ≤ 2`**.
+
+So only `lMin(Ḡ) = 1` with `ecc(B) ≥ 3` survives — and that pins the graph down
+completely:
+
+> **Lemma.** `lMin(Ḡ) = 1 ⟹ rad(G) ≤ 2`.
+>
+> *Proof.* `lMin(Ḡ) = 1` says some `v` has `N_Ḡ(v)` a clique of `Ḡ`, i.e.
+> **`V ∖ N[v]` is independent in `G`**. Any `u` outside `N[v]` then has no
+> neighbour outside `N[v]`, so `N(u) ⊆ N(v)` and `dist(v,u) = 2`. Hence
+> `ecc(v) ≤ 2`. ∎
+
+`ecc(B) ≥ 3` forces `diam ≥ 4`, and `diam ≤ 2·rad ≤ 4`, so the remaining case is
+**exactly** `lMin(Ḡ) = 1`, `rad = 2`, `diam = 4`, `ecc(B) = 3`, asking for
+`tree ≥ 6`. All 148 such graphs on ≤ 8 vertices satisfy it.
+
+**And the missing construction is visible.** Write `A = N(v)` and
+`B₀ = V ∖ N[v]`, independent with every neighbour in `A`. Two vertices `x, y` at
+distance 4 both lie in `B₀`; taking `a ∈ A` adjacent to `x` and `a' ∈ A`
+adjacent to `y`, the path `x — a — v — a' — y` is induced whenever `a ≁ a'`,
+since `x ≁ v, a', y` (any of those would put `x` within 3 of `y`). That is five
+vertices. **The conjecture needs six** — one more vertex of `B₀` attaching to the
+path at exactly one point.
+
 ## Result: conjecture 142 is true for girth at most 3, by the same move
 
 > **WOWII 142.** *`tree(G) ≥ (2/3)·girth(G) + ecc(B)`, with `B` the periphery —

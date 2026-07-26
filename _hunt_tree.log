@@ -3,3 +3,4 @@ counterexample hunt, 9..13 vertices
      conj   n  best margin   verdict
       141   9          0.0
       141  10         -0.5
+      141  11         -0.5
