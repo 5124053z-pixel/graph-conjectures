@@ -54,13 +54,30 @@ exactly
 where the conjecture asks for tree(G) >= 6. Every one of the 148 such graphs on
 at most 8 vertices satisfies it.
 
-**The shape of the missing construction.** In that case write A = N(v) and
+**The missing construction, and how little is missing.** Write A = N(v) and
 B0 = V \ N[v], which is independent with every neighbour in A. Two vertices
-x, y at distance 4 must both lie in B0, and picking a in A adjacent to x and a'
-in A adjacent to y gives the path x - a - v - a' - y, which is induced whenever
-a and a' are non-adjacent: x is not adjacent to v or to a' or to y (else
-dist(x,y) < 4), symmetrically for y. That is five vertices; the conjecture needs
-six, so one more vertex of B0 has to attach to the path at exactly one point.
+x, y at distance 4 must both lie in B0. Pick a in A adjacent to x and a' in A
+adjacent to y. Then **a and a' are automatically non-adjacent** -- an edge aa'
+would give the path x-a-a'-y and put x within distance 3 of y -- so
+
+    x - a - v - a' - y
+
+is an induced P5: x is adjacent to none of v, a', y, and symmetrically for y.
+That is five vertices where the conjecture needs six, and a sixth comes from
+either
+
+    (i) some z in B0 adjacent to exactly one of a, a'  -- z is automatically
+        non-adjacent to x, y (B0 is independent) and to v, so it attaches to
+        the path at one point; or
+    (ii) some a'' in A adjacent to neither a nor a' -- it attaches at v,
+        turning the path into a spider.
+
+Searching all choices of v, x, y, a, a' over the 148 graphs of this shape on at
+most 8 vertices, (ii) works for 115 and (i) for 30. **Three graphs admit
+neither**, all on 8 vertices, and all satisfy the conjecture by some other
+induced tree. So the conjecture is settled except for a configuration that
+occurs 3 times in 12,112 graphs, and closing it needs one further construction
+for that configuration.
 """
 from __future__ import annotations
 
