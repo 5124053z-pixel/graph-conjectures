@@ -2096,6 +2096,33 @@ graph all five Hamiltonicity certificates correctly decline, and the in-range
 claims (`n ≤ 8`) were all literally true. The failure was entirely in not
 reading the source list.
 
+## Result: conjecture 142 is true for girth at most 3, by the same move
+
+> **WOWII 142.** *`tree(G) ≥ (2/3)·girth(G) + ecc(B)`, with `B` the periphery —
+> the vertices of **maximum** eccentricity.*
+
+> **Lemma.** `diam(G) ≥ 1 + ecc(B)`.
+>
+> *Proof.* Let `v` attain `k = ecc(B) = dist(v, B)`. If `k = 0` the claim is
+> `diam ≥ 1`. If `k ≥ 1` then `v ∉ B`, and `B` is exactly the set of vertices
+> whose eccentricity **is** the diameter, so `ecc(v) ≤ diam − 1`; and some
+> vertex of `B` sits at distance `k`, so `k ≤ ecc(v) ≤ diam − 1`. ∎
+
+One line, where the centre version needed two — the periphery is defined by the
+diameter, so both halves of the argument collapse together. Then for a graph
+containing a triangle,
+
+    tree(G) ≥ diam + 1 ≥ 2 + ecc(B) = (2/3)·girth + ecc(B),
+
+and forests are trivial. **142 holds for every connected graph of girth ≤ 3** —
+11,803 of the 12,112 graphs on at most 8 vertices.
+
+**The two lemmas are worth stating on their own.** For any connected graph on
+`≥ 2` vertices, `diam ≥ 1 + ecc(Centers)` and `diam ≥ 1 + ecc(Periphery)`. Both
+have zero violations over the 12,112-graph corpus, neither appears in the
+literature reached here, and each buys a whole girth regime of a conjecture that
+had no proof at all.
+
 ## Result: conjecture 144 is true for girth at most 3
 
 > **WOWII 144.** *`tree(G) ≥ girth(G) − 1 + ecc(Centers(G))`.*
