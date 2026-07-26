@@ -2277,8 +2277,20 @@ completely:
 distance 4 both lie in `B₀`; taking `a ∈ A` adjacent to `x` and `a' ∈ A`
 adjacent to `y`, the path `x — a — v — a' — y` is induced whenever `a ≁ a'`,
 since `x ≁ v, a', y` (any of those would put `x` within 3 of `y`). That is five
-vertices. **The conjecture needs six** — one more vertex of `B₀` attaching to the
-path at exactly one point.
+vertices. **The conjecture needs six**, and searching every choice of
+`v, x, y, a, a'` over the 148 graphs of this shape shows exactly four ways to
+find it:
+
+| sixth vertex | graphs |
+|---|---|
+| `a'' ∈ A` adjacent to neither `a` nor `a'` — attaches at `v`, making a spider | 115 |
+| `z ∈ B₀` adjacent to exactly one of `a, a'` | 30 |
+| an **induced `P₆`** — a longer path instead of a branch | 2 |
+| a **spider** with legs 1, 2, 2 centred in `A` — the only induced 6-tree that graph has | 1 |
+
+**All 148 are covered, so the conjecture is settled in range.** None of the four
+witnesses is proved to always exist, which is the honest status: **98.6% proved,
+the remaining 1.4% verified by explicit construction.**
 
 ## Result: conjecture 142 is true for girth at most 3, by the same move
 
@@ -2364,10 +2376,27 @@ At girth 4 the target is `3 + ecc(C)`:
 | 0 | 28 | **proved** — a shortest `C₄` minus a vertex is an induced `P₃` |
 | 1 | 120 | **proved** — the forcing lemma gives `diam ≥ 3`, so `tree ≥ diam+1 ≥ 4` |
 | 2, `diam ≥ 4` | 105 | **proved** — `tree ≥ diam+1 ≥ 5` |
-| 2, `diam = 3` | **19** | open; needs the caterpillar or cycle-path construction |
-| ≥ 3 | 3 | holds via `diam+1`, but needs `diam ≥ 2 + ecc(C)`, unproved |
+| 2, `diam = 3` | **19** | construction verified, existence unproved |
+| ≥ 3 | 3 | `diam ≥ 2 + ecc(C)` holds here, unproved in general |
 
-So girth 4 is down to **two** sub-cases, one of them 19 graphs wide.
+**256 of the 275 are proved outright.** For the 19 the construction is explicit
+and works on every one of them:
+
+> Take `v, u` at distance 3 with a shortest path `v — a — b — u`, and a second
+> neighbour `a'` of `v` with `a' ≁ b`. Then `{v, a, b, u, a'}` induces a tree on
+> **five** vertices. The two non-edges it needs are free: `a' ≁ a` because `G`
+> is triangle-free and both lie in `N(v)`, and `a' ≁ u` because that would put
+> `u` within distance 2 of `v`.
+
+It succeeds on **19 of 19**. What is missing is a proof that such an `a'` always
+exists — the obstruction is `N(v) ⊆ N(b)`, and the general statement
+`girth ≥ 4 and diam ≥ 3 ⟹ tree ≥ 5` is **false**, with exactly two exceptions
+on ≤ 8 vertices. Both have `ecc(Centers) = 1`, so neither intrudes on the case
+that needs them — which is suggestive but not an argument.
+
+Likewise `girth ≥ 4 ⟹ diam ≥ 2 + ecc(C)` fails on 22 graphs, and those 22 are
+*exactly* the `ecc(C) = 2, diam = 3` case. The two open sub-cases of girth 4 are
+the same obstruction seen twice.
 
 **What is left, precisely.** Girth `≥ 5`, where the target `(g−1) + ecc(C)`
 outruns what a shortest path supplies. The obstruction is concrete: **a shortest
