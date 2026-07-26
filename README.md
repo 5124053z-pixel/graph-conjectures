@@ -2035,6 +2035,36 @@ within one step by rerunning the real toolkit, whose bound list only ever
 contains validated entries — which is an argument for the toolkit being the only
 path to a coverage number.
 
+## Retraction: conjecture 160 is not refuted
+
+An earlier claim here was that conjecture 160 is "false as formalised", with a
+five-vertex counterexample. **The counterexample is real and the framing was
+too generous to itself.** Testing both readings of the symbol `c_C4` over all
+12,112 connected graphs on at most 8 vertices:
+
+| reading of `c_C4` | violations |
+|---|---|
+| **count** of induced 4-cycles — what the Lean file uses | **8,985** |
+| **indicator**, `0` if `G` has a `C₄` and `1` otherwise — what conjecture 133 uses for the same symbol | **0** |
+| indicator on *induced* `C₄` | 1,969 |
+
+A statement failing on three quarters of all small graphs is not something
+Graffiti would emit and nobody would list as open for twenty years. The same
+symbol is an indicator ten conjectures earlier on the same list. **So the count
+reading is a transcription error, and under the correct reading conjecture 160
+holds everywhere it has been checked and is still open.**
+
+Nothing here refutes conjecture 160. What it refutes is
+`GraphConjecture160.lean`, which is worth reporting upstream — and the evidence
+is now a ratio of 8,985 to 0 rather than one small graph.
+
+The general lesson is the one from failure 11 and failure 17, arriving a third
+time: **formalisation fixes ambiguity, not fidelity.** Three separate
+definitional problems have now surfaced in this directory — `ecc` read as a
+radius, `⌊girth/2⌋` where the original has `girth/2`, and `c_C4` as a count
+where the list means an indicator — and each was invisible until something
+outside the formalisation was consulted.
+
 ## The literature check, done properly — and what it found
 
 The Lean formalisations carry `category research open`. **That tag is not a

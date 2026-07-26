@@ -1,4 +1,22 @@
-"""Written on the Wall II, Conjecture 160 — the formalised statement is false.
+"""Written on the Wall II, Conjecture 160 — the Lean file is wrong, the
+conjecture is not refuted.
+
+    THE HEADLINE, stated first because an earlier version of this file buried
+    it. Conjecture 160 is NOT refuted by anything here. What is refuted is the
+    transcription in `GraphConjecture160.lean`, and the evidence is now
+    decisive rather than a single counterexample:
+
+        c_C4 read as a COUNT of induced 4-cycles (the Lean file):
+            8,985 violations among the 12,112 connected graphs on <= 8 vertices
+        c_C4 read as an INDICATOR, 0 if G has a C4 and 1 otherwise
+            -- exactly the convention conjecture 133 uses for the same symbol:
+            0 violations
+
+    A statement that fails on three quarters of all small graphs is not a
+    conjecture anyone would publish, and the same symbol is defined as an
+    indicator ten conjectures earlier on the same list. So the count reading is
+    a transcription error, and under the indicator reading conjecture 160 holds
+    everywhere it has been checked and remains open.
 
 `formal-conjectures/FormalConjectures/WrittenOnTheWallII/GraphConjecture160.lean`
 states, tagged `@[category research open]`:
