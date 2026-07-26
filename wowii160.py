@@ -143,16 +143,16 @@ def compare_readings(nmax=8):
         ("indicator on induced C4",
          lambda g: 0 if count_induced_c4(g) > 0 else 1),
     ]
-    print(f"
-the two readings of c_C4, over the {len(gs)} connected graphs "
+    print()
+    print(f"the two readings of c_C4, over the {len(gs)} connected graphs "
           f"on 2..{nmax}")
     for name, c in readings:
         bad = sum(1 for g in gs
                   if max_leaves_via_cds(g) < ml(g) + max_triangles_at_vertex(g) * c(g))
         verdict = "HOLDS EVERYWHERE" if not bad else f"{bad} violations"
         print(f"   {name:<58} {verdict}")
-    print("
-   A statement failing on three quarters of all small graphs is not")
+    print()
+    print("   A statement failing on three quarters of all small graphs is not")
     print("   one anybody lists as open for twenty years. The count reading is a")
     print("   transcription error; conjecture 160 itself is NOT refuted here.")
 
