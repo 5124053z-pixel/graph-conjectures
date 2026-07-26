@@ -2232,6 +2232,37 @@ on its own. The conjecture measures eccentricity from the **centre**; every
 construction here starts at the **cycle**. Closing it means relating those two,
 or building from the centre outward.
 
+## The counterexample hunt above n = 8
+
+With the graded margin (see failure 18), hill-climbing over 9–12 vertices,
+10 restarts of 400 edge-toggles each:
+
+```
+ conj    n = 9   10    11    12      best margin reached
+  194        0    0     0     0      tight, holds
+  217        0    0     0     0      tight, holds
+ 198a        0    0     0     0      tight, holds
+   61        0    0     0            tight, holds
+   59        0    0     0            tight, holds
+  100        0   -1    -1            tight at 9, slack after
+    2     -0.1 -0.6  -0.3            never tight
+```
+
+Margin 0 means the search reached **equality** — the hypothesis satisfied and
+the conclusion holding exactly — which is the right neighbourhood to be
+searching in. **No counterexample was found.**
+
+How much that is worth: the same method reproduced conjecture 291's
+counterexample in seconds, but failed to rediscover conjecture 200's in ten
+minutes, because 200's hypothesis is an equality that hill-climbing hits only by
+luck. So this is **moderate evidence** for 194, 198a, 217, 61 and 59, whose
+hypotheses are inequalities the search can steer into — and it is the strongest
+available evidence that the Hamiltonian family does not fall over immediately
+above the exhaustive range, as 200 did.
+
+Conjecture 2 never reaches equality at all, which is a different signal: the
+bound `Ls ≥ 2(l_avg − 1)` has room to spare at these orders.
+
 ## How likely is any of the rest to be proved
 
 Asked directly, and worth answering with numbers rather than encouragement.
