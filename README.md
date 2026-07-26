@@ -2303,9 +2303,17 @@ and forests are trivial. **142 holds for every connected graph of girth ≤ 3** 
 
 **The two lemmas are worth stating on their own.** For any connected graph on
 `≥ 2` vertices, `diam ≥ 1 + ecc(Centers)` and `diam ≥ 1 + ecc(Periphery)`. Both
-have zero violations over the 12,112-graph corpus, neither appears in the
-literature reached here, and each buys a whole girth regime of a conjecture that
-had no proof at all.
+have zero violations over the 12,112-graph corpus and each buys a whole girth
+regime of a conjecture that had no proof at all.
+
+**Literature status of the two lemmas.** Searched for and not found. The nearest
+published work is Dankelmann–Goddard–Henning–Swart, *Generalised Eccentricity,
+Radius and Diameter in Graphs*, which studies the `k`-eccentricity of *arbitrary*
+`(k−1)`-subsets and the `t`-centres of facility-location problems — a different
+generalisation, taking a maximum over all subsets of a given size rather than
+looking at the classical centre as a set. Given how elementary the proofs are,
+folklore remains the safest assumption, and the note drafted for DeLaViña says
+so.
 
 ## Result: conjecture 144 is true for girth at most 3
 
@@ -2338,7 +2346,30 @@ the regime rather than a verification.
 
 Zero violations of the lemma over the 12,112 connected graphs on ≤ 8 vertices.
 
-**What is left, precisely.** Girth `≥ 4`, where the target `(g−1) + ecc(C)`
+### Girth 4 breaks into four sub-cases, three of them settled
+
+> **Forcing lemma.** A triangle-free graph of diameter 2 is **self-centred**, so
+> `ecc(Centers) = 0`.
+>
+> *Proof.* `diam = 2` gives `rad ∈ {1,2}`. If `rad = 1` some vertex `v` dominates,
+> so `N(v) = V ∖ {v}`, and triangle-freeness makes `N(v)` independent — `G` is a
+> star, which is acyclic and has girth 0, contradicting girth 4. So `rad = 2 =
+> diam`, every eccentricity is 2, and the centre is all of `V`. ∎ (Zero
+> violations over every triangle-free graph on ≤ 8 vertices.)
+
+At girth 4 the target is `3 + ecc(C)`:
+
+| `ecc(C)` | graphs | status |
+|---|---|---|
+| 0 | 28 | **proved** — a shortest `C₄` minus a vertex is an induced `P₃` |
+| 1 | 120 | **proved** — the forcing lemma gives `diam ≥ 3`, so `tree ≥ diam+1 ≥ 4` |
+| 2, `diam ≥ 4` | 105 | **proved** — `tree ≥ diam+1 ≥ 5` |
+| 2, `diam = 3` | **19** | open; needs the caterpillar or cycle-path construction |
+| ≥ 3 | 3 | holds via `diam+1`, but needs `diam ≥ 2 + ecc(C)`, unproved |
+
+So girth 4 is down to **two** sub-cases, one of them 19 graphs wide.
+
+**What is left, precisely.** Girth `≥ 5`, where the target `(g−1) + ecc(C)`
 outruns what a shortest path supplies. The obstruction is concrete: **a shortest
 cycle need not be eccentric enough.** On 24 of the 309 graphs of girth ≥ 4 on at
 most 8 vertices — the smallest on 6 — *no* shortest cycle `C` has
