@@ -2125,6 +2125,16 @@ reading the source list.
 > eat most of it**, and the best guaranteed remainder is about `(d+1)/6`, which
 > is not enough.
 >
+> **How close the construction gets.** Allowing every diametral pair, every
+> shortest path between them, all three offsets and every maximum independent
+> set, the 3-packing reaches `⌊d/3⌋` on **7,494 of the 7,500** graphs with
+> `diam ≥ 3`. The six exceptions all have `diam = 6` on 7 or 8 vertices, and the
+> smallest is **`P₇` itself** — the maximum independent set `{v₀,v₂,v₄,v₆}`
+> leaves exactly one vertex in each offset class, so the best offset gives 1
+> where 2 is needed. The construction fails precisely on path-like graphs, and
+> there `f = n` settles it for free. **That is the shape of a proof, not a
+> proof.**
+>
 > Conjecture 200 was "settled in range" over these same 12,112 graphs and is
 > false at 11 vertices. An unproved bound with the same evidence gets the same
 > suspicion, and it is kept out of the default bound lists.

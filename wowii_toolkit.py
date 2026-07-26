@@ -173,7 +173,7 @@ def b_rad_path(g):
 
 
 def b_alpha_diam3(g):
-    """f(G) >= alpha(G) + floor(diam/3).
+    r"""f(G) >= alpha(G) + floor(diam/3).
 
     *** NOT PROVED. *** Zero violations over the 12,112 connected graphs on at
     most 8 vertices, over paths, cycles, grids, hypercubes, Petersen, Heawood,
@@ -187,6 +187,15 @@ def b_alpha_diam3(g):
     forest -- giving f(G) >= alpha + |X \ I|. A shortest path supplies a
     3-packing of size floor(d/3) + 1, but a maximum independent set can eat
     most of it, and the best guaranteed remainder is about (d+1)/6.
+
+    How close the construction gets: allowing every diametral pair, every
+    shortest path between them, all three offsets j = 0, 1, 2 and every maximum
+    independent set, the 3-packing reaches floor(d/3) on 7,494 of the 7,500
+    graphs with diam >= 3. The **six** exceptions all have diam = 6 on 7 or 8
+    vertices -- the smallest is P_7 itself, where a maximum independent set
+    {v0, v2, v4, v6} leaves only one vertex in each offset class. So the
+    construction fails exactly on path-like graphs, and there f = n settles it
+    for free. That is the shape of a proof, not a proof.
 
     Kept out of the default bound lists for that reason. Conjecture 200 was
     "settled in range" over 12,112 graphs and is false at 11 vertices; an
