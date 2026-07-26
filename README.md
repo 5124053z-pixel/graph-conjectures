@@ -2583,6 +2583,36 @@ complete bipartite and then names the Wagner graph.
 
 ## What went wrong (continued)
 
+**19. A label said one thing and the code did another, and a conclusion rested
+on the label.** The original refutation of conjecture 160 rested on the line
+
+```python
+"indicator, 0 if C4 (conjecture 133's convention)": 0 if n4 else 1,
+```
+
+where `n4 = count_induced_c4(g)`. **Conjecture 133 does not use that test.** It
+uses `hasC4` — a 4-cycle as a *subgraph*, not an induced one — and the two
+differ on **310 of the 995** connected graphs on at most 7 vertices. Under the
+convention the label named, `c_C4` never breaks the statement: 0 violations at
+7 vertices and 0 at 8. Under the convention the code actually computed, it
+breaks 294 times.
+
+So the file printed "no reading of `c_C4` rescues it" while never having tested
+the reading it claimed to test, and the write-up, the README, the status table
+and three separate summaries all inherited that. It survived for a long time
+because the *number* it printed was correct for what it computed — nothing was
+inconsistent, only mislabelled.
+
+What makes this worse than an ordinary bug: the label was the part a reader
+checks. Every other guard in this project — the count check in `allgraphs.py`,
+the self-test in `laplacian_bounds.py`, the `SUSPICIOUS_ORDER` guard, validating
+every certificate against the truth before use — compares a computed value
+against something independent. **None of them compares a name against what the
+code under it does.** The fix that would have caught it is to derive the label
+from the function: a dictionary of `{name: callable}` where the callable is
+`W.has_c4_subgraph` itself, not a hand-written expression that is supposed to
+match it.
+
 **18. A search objective that takes two values is not a search objective.** The
 counterexample hunter scored the Hamiltonian-path conjectures as `+1` if the
 hypothesis held and there was no Hamiltonian path, `−1` otherwise. Hill-climbing

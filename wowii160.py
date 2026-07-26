@@ -58,10 +58,13 @@ directory:
 * conjecture 100's doc comment says `diam(Gᶜ)` where its Lean statement uses
   `degreeL2Norm Gᶜ`.
 
-So the likely reading is that `c_{C4}` in the original is an indicator too. That
-does not rescue the statement either: all three readings — count, `0 if C4`, and
-`1 if C4` — fail, the last two with counterexamples on 4 and 5 vertices
-respectively. Whatever conjecture 160 says, the file does not say it.
+So the likely reading is that `c_{C4}` in the original is an indicator too — and
+it does rescue the statement. **An earlier version of this file said otherwise,
+and was wrong because of a mislabelled line.** It tested "0 if C4, conjecture
+133's convention" while actually computing the indicator of an *induced*
+4-cycle; conjecture 133 uses `hasC4`, a 4-cycle as a **subgraph**, and those two
+tests differ on 310 of the 995 connected graphs on at most 7 vertices. Under the
+real convention the statement has **no violation anywhere it has been checked**.
 
 The useful output here is a bug report against the formalisation, not a
 mathematical claim.
@@ -70,7 +73,7 @@ from __future__ import annotations
 
 import networkx as nx
 
-from wowii import (local_independence, max_triangles_at_vertex,
+from wowii import (has_c4_subgraph, local_independence, max_triangles_at_vertex,
                    count_induced_c4, max_leaves_spanning_tree)
 
 COUNTEREXAMPLE = nx.Graph([(0, 1), (0, 3), (0, 4), (1, 2),
@@ -78,12 +81,23 @@ COUNTEREXAMPLE = nx.Graph([(0, 1), (0, 3), (0, 4), (1, 2),
 
 
 def readings(g):
-    """The three ways c_{C4} can be read, all of which fail somewhere."""
+    """The four ways c_{C4} can be read.
+
+    The third line is the one that matters and it was **mislabelled** in an
+    earlier version of this file: it said "conjecture 133's convention" while
+    computing the indicator of an *induced* 4-cycle. Conjecture 133 uses
+    `hasC4`, a 4-cycle as a **subgraph**, which is a different test on 310 of
+    the 995 connected graphs on at most 7 vertices. Under the real convention
+    the statement never fails; under the mislabelled one it fails often, and
+    that is how this file came to claim that no reading rescues it."""
     n4 = count_induced_c4(g)
+    sub = has_c4_subgraph(g)
     return {
-        "count (as formalised)": n4,
-        "indicator, 0 if C4 (conjecture 133's convention)": 0 if n4 else 1,
-        "indicator, 1 if C4": 1 if n4 else 0,
+        "count of induced C4 (as formalised)": n4,
+        "indicator, 0 if INDUCED C4 else 1": 0 if n4 else 1,
+        "indicator, 1 if induced C4 else 0": 1 if n4 else 0,
+        "indicator, 0 if C4 SUBGRAPH else 1  (conjecture 133's actual convention)":
+            0 if sub else 1,
     }
 
 
@@ -107,7 +121,7 @@ def main():
     print(f"   {ml + mt * c4} > {ls}, so the statement fails."
           f"  {'CONFIRMED' if ml + mt * c4 > ls else 'DOES NOT FAIL'}")
 
-    print("\nno reading of c_C4 rescues it -- smallest counterexample per reading,")
+    print("\nsmallest counterexample per reading,")
     print("over all connected graphs on 2..6 vertices:")
     graphs = [x for x in nx.graph_atlas_g()
               if 2 <= x.number_of_nodes() <= 6 and nx.is_connected(x)]
