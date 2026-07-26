@@ -518,7 +518,9 @@ regained a residual until both were present — its one hard case is `C₅` with
 two-vertex path hanging off a single cycle vertex, which only the path version
 sees.
 
-**Elsewhere:** `160` is false as formalised (five-vertex counterexample); `194`,
+**Elsewhere:** `160`'s *Lean transcription* is false — 8,985 violations under
+the count reading of `c_C4` against **0** under the indicator reading the list
+actually uses, so the conjecture itself stands; `194`,
 `198a`, `200` and `217` are 80–99% covered by Chvátal–Erdős, with `217` split so
 that the `residue ≠ 2` half is trivial; `314` sits 35/40 inside a published
 characterisation; `2`, `100`, `145`, `291` remain open with no reduction.

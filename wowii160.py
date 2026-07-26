@@ -122,5 +122,41 @@ def main():
               f"{min(bad) if bad else '-'}")
 
 
+
+def compare_readings(nmax=8):
+    """The decisive test: which reading of c_C4 makes the statement plausible."""
+    import networkx as nx
+    from wowii import (largest_induced_bipartite, local_independence,
+                       max_triangles_at_vertex, count_induced_c4,
+                       has_c4_subgraph, max_leaves_via_cds)
+    if nmax <= 7:
+        gs = [g for g in nx.graph_atlas_g()
+              if 2 <= g.number_of_nodes() <= nmax and nx.is_connected(g)]
+    else:
+        from allgraphs import connected_graphs
+        gs = connected_graphs(nmax, verbose=False)
+    ml = lambda g: max(local_independence(g, v) for v in g)
+    readings = [
+        ("count of induced C4  (the Lean file)", count_induced_c4),
+        ("indicator, 0 if G has a C4 else 1  (as in conjecture 133)",
+         lambda g: 0 if has_c4_subgraph(g) else 1),
+        ("indicator on induced C4",
+         lambda g: 0 if count_induced_c4(g) > 0 else 1),
+    ]
+    print(f"
+the two readings of c_C4, over the {len(gs)} connected graphs "
+          f"on 2..{nmax}")
+    for name, c in readings:
+        bad = sum(1 for g in gs
+                  if max_leaves_via_cds(g) < ml(g) + max_triangles_at_vertex(g) * c(g))
+        verdict = "HOLDS EVERYWHERE" if not bad else f"{bad} violations"
+        print(f"   {name:<58} {verdict}")
+    print("
+   A statement failing on three quarters of all small graphs is not")
+    print("   one anybody lists as open for twenty years. The count reading is a")
+    print("   transcription error; conjecture 160 itself is NOT refuted here.")
+
+
 if __name__ == "__main__":
     main()
+    compare_readings(8)
