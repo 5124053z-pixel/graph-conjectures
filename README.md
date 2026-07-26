@@ -2344,6 +2344,32 @@ complete bipartite and then names the Wagner graph.
 
 ## What went wrong (continued)
 
+**18. A search objective that takes two values is not a search objective.** The
+counterexample hunter scored the Hamiltonian-path conjectures as `+1` if the
+hypothesis held and there was no Hamiltonian path, `−1` otherwise. Hill-climbing
+on that is a random walk: **every move looks equally good until the moment the
+answer appears**, and the runs at 9–13 vertices reported `−1` throughout, which
+says nothing at all.
+
+The fix is to score *how far* a graph is from being a counterexample —
+hypothesis slack first, then `n − (order of a longest path)`, which is 0 exactly
+when a Hamiltonian path exists and grows as the graph gets worse. With that the
+searches immediately climb into the admissible region and sit at margin 0,
+meaning "hypothesis satisfied, Hamiltonian path exists" — a real answer rather
+than noise.
+
+This is **failure 10 in a new costume**. That one put a penalty exactly at the
+goal state so the annealer avoided it; this one made every state look identical
+so the climber could not move. Both are the same mistake: *the objective was
+written to recognise the answer, not to lead to it.*
+
+A control run matters here and the honest report is mixed: the hunter did
+reproduce conjecture 291's counterexample in seconds, but it did **not**
+rediscover conjecture 200's inside ten minutes — 200's hypothesis is an
+*equality*, `tree(G) = ⌈1 + l_avg⌉`, which hill-climbing hits only by luck. So a
+null result from this method is weak evidence for the equality-hypothesis
+conjectures and moderate evidence for the inequality ones.
+
 **16. Treating a formalisation's `open` tag as a status report.** The whole
 reason for using the Lean list was that Graffiti's own statements are ambiguous,
 and formalisation fixes that. It does — and it was allowed to answer a question

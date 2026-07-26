@@ -80,30 +80,86 @@ MARGINS = {
     145: lambda g: _margin_145(g),
 }
 
+def longest_path_order(g):
+    """Order of a longest path, by Held-Karp over subsets."""
+    nodes = list(g)
+    n = len(nodes)
+    if n <= 1:
+        return n
+    idx = {v: i for i, v in enumerate(nodes)}
+    adj = [0] * n
+    for u, v in g.edges():
+        adj[idx[u]] |= 1 << idx[v]
+        adj[idx[v]] |= 1 << idx[u]
+    reach = [0] * (1 << n)          # bitmask of possible endpoints
+    for i in range(n):
+        reach[1 << i] = 1 << i
+    best = 1
+    for mask in range(1 << n):
+        ends = reach[mask]
+        if not ends:
+            continue
+        c = bin(mask).count("1")
+        if c > best:
+            best = c
+        i = 0
+        e = ends
+        while e:
+            if e & 1:
+                nxt = adj[i] & ~mask
+                while nxt:
+                    j = (nxt & -nxt).bit_length() - 1
+                    reach[mask | (1 << j)] |= 1 << j
+                    nxt &= nxt - 1
+            e >>= 1
+            i += 1
+    return best
+
+
+# hypothesis slack: <= 0 means the hypothesis holds, and the size of a positive
+# value says how far off it is -- which is what makes the landscape climbable.
 HAM = {
-    194: lambda g: W.indep_number(g) <= 1 + W.avg_l(g),
+    194: lambda g: W.indep_number(g) - (1 + W.avg_l(g)),
     "198a": lambda g: (W.largest_induced_bipartite(g)
-                       <= 2 + sum(nx.eccentricity(g).values()) / g.number_of_nodes()),
-    217: lambda g: W.max_leaves_via_cds(g) <= 4 * (1 if W.residue(g) == 2 else 0) + 2,
+                       - (2 + sum(nx.eccentricity(g).values()) / g.number_of_nodes())),
+    217: lambda g: (W.max_leaves_via_cds(g)
+                    - (4 * (1 if W.residue(g) == 2 else 0) + 2)),
+    # CONTROL. Conjecture 200 is known false, with an 11-vertex counterexample
+    # published 21 July 2026. Its hypothesis is an *equality*, which hill
+    # climbing hits only by luck, and at these settings the control run did not
+    # rediscover it inside ten minutes. The honest control for this method is
+    # conjecture 291, whose counterexample it did reproduce in seconds -- see
+    # wowii_status.py. Treat a null result below as weak evidence at best.
+    200: lambda g: (W.largest_induced_tree(g) - math.ceil(1 + W.avg_l(g))
+                    if W.largest_induced_tree(g) == math.ceil(1 + W.avg_l(g))
+                    else 1),
 }
 
 
 def margin(num, g):
-    """Positive means counterexample; None means the hypothesis does not apply."""
+    """Positive means counterexample.
+
+    For the Hamiltonian-path conjectures the naive margin -- +1 if the
+    hypothesis holds and there is no Hamiltonian path, -1 otherwise -- takes
+    two values, so hill-climbing has no gradient to follow and the first run of
+    this file found nothing for exactly that reason. The graded version scores
+    the hypothesis slack heavily and then rewards a *short* longest path, so
+    the search can walk towards non-Hamiltonicity while staying admissible."""
     if num in HAM:
         try:
-            if not HAM[num](g):
-                return None
+            slack = HAM[num](g)
         except Exception:
             return None
-        return 1 if not W.has_hamiltonian_path(g) else -1
+        if slack > 0:                       # hypothesis fails: climb towards it
+            return -100 - slack
+        return g.number_of_nodes() - longest_path_order(g)
     try:
         return MARGINS[num](g)
     except Exception:
         return None
 
 
-def hunt(num, n, iters=1500, restarts=25, seed0=0, verbose=False):
+def hunt(num, n, iters=400, restarts=10, seed0=0, verbose=False):
     best_seen = None
     for seed in range(seed0, seed0 + restarts):
         rng = random.Random(seed * 7919 + n)

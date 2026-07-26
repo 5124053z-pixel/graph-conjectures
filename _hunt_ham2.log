@@ -1,0 +1,13 @@
+counterexample hunt, 9..12 vertices
+
+     conj   n  best margin   verdict
+      194   9            0
+      194  10            0
+      194  11            0
+      194  12            0
+      217   9            0
+      217  10            0
+      217  11            0
+      217  12            0
+     198a   9            0
+     198a  10            0
