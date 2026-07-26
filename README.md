@@ -2073,6 +2073,54 @@ graph all five Hamiltonicity certificates correctly decline, and the in-range
 claims (`n ≤ 8`) were all literally true. The failure was entirely in not
 reading the source list.
 
+## Attribution of every bound in the toolkit
+
+Run at the same time as the status check, and it moved several entries out of
+the "found here" column. **None of the bounds below were invented here except
+where the last column says so**, and two that had been treated as fresh
+observations are theorems from 1986.
+
+| bound | due to |
+|---|---|
+| `path(G) ≥ 2·rad − 1` | **Erdős–Saks–Sós 1986, Thm 2.2** — proof by Fan Chung |
+| `tree(G) ≥ 2·rad − 1` | same, since an induced path is an induced tree |
+| `f(G) ≥ α + 1`, `tree ≥ 1 + max_v l(v)` | folklore — the neighbourhood star |
+| `f, tree, path ≥ diam + 1` | folklore — a shortest path is induced |
+| `tree(G) ≥ girth − 1` | folklore — a shortest cycle is chordless |
+| `f(G) ≥ n − (m − n + 1)` | folklore; the systematic study of `t(G)` against the cyclomatic number is Erdős–Saks–Sós §3–7 |
+| `b(G) ≥ f(G) ≥ tree(G) ≥ path(G)` | definitional |
+| `Ls(G) ≥ Δ` | classical |
+| `α ≤ n − ν` | **Gallai** |
+| `γ_t ≤ n − Δ + 1`, `γ_t ≤ 2γ` | classical |
+| Chvátal–Erdős, Ore, Bondy–Chvátal closure, Chvátal's degree condition | classical |
+| Bacsó–Tuza (dominating clique or `P₃` in a `P₅`-free graph) | **Bacsó–Tuza 1990** |
+| a dominating edge in a triangle-free graph splits `V` into two independent sets | **Bahadır–Ekim–Gözüpek 2020, Lemma 3.7** |
+| `tree(G) ≥ Δ + ⌊girth/2⌋` for `girth ≥ 6` | assembled here from the standard locally-tree-like ball argument |
+| `tree(G) ≥ 2 + max_v l(v)` for `girth ≥ 5` | assembled here |
+| `f(G) ≥ |I ∪ A|`, `I` maximum independent, `A` independent, the bipartite graph between them acyclic | assembled here |
+
+Erdős–Saks–Sós also prove (Thm 8.2) tight bounds for `t(G)` in terms of `α(G)`,
+and their central result is that `t(G)` is **surprisingly small** for dense
+graphs — `f(n, cn) = 2 log log n + O(log log log n)`. That is worth knowing
+before spending effort on lower bounds for induced trees: there is very little
+room in the dense range, and every bound here that works does so by living in
+the sparse or high-girth range.
+
+### What this means for conjecture 314
+
+The dominating-edge half of the proof rests on a bipartition lemma that is
+**Lemma 3.7 of Bahadır–Ekim–Gözüpek (2020)**, whose proof is the same three
+lines. Worse for novelty, their **Theorem 3.8** characterises triangle-free
+`WTD(2)` graphs completely, so that half of 314 is derivable from published
+work — the route here is shorter for this particular class, but it is not new
+mathematics.
+
+**Part 1 — the cap `|S| ≤ 3` — does appear to be new.** Their paper handles
+`γ_t = 2` in detail and poses "what are `WTD(k)` graphs" as an open problem; the
+`γ_t = 3` case for triangle-free `P₅`-free graphs is not in it. That is the part
+of 314 worth keeping: the private-neighbour argument that walks `G[S]` down to
+complete bipartite and then names the Wagner graph.
+
 ## What went wrong (continued)
 
 **16. Treating a formalisation's `open` tag as a status report.** The whole

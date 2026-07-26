@@ -139,7 +139,11 @@ def b_one_vertex_off(g):
 
 
 def b_rad_tree(g):
-    """tree(G) >= 2*rad - 1: a shortest path realising the radius, both ways."""
+    """tree(G) >= 2*rad - 1.
+
+    Erdos, Saks and Sos, *Maximum induced trees in graphs*, JCTB 41 (1986),
+    Theorem 2.2 -- stated there for the induced path number, with a proof due
+    to Fan Chung, and an induced path is an induced tree."""
     return 2 * nx.radius(g) - 1
 
 
@@ -159,7 +163,12 @@ def b_cyclomatic(g):
 
 
 def b_rad_path(g):
-    """path(G) >= 2*rad - 1."""
+    """path(G) >= 2*rad - 1.
+
+    Erdos, Saks and Sos, *Maximum induced trees in graphs*, JCTB 41 (1986),
+    Theorem 2.2, with a proof due to Fan Chung. Not a free observation --
+    a published theorem, found only when the bounds were checked against
+    the literature rather than only against the corpus."""
     return 2 * nx.radius(g) - 1
 
 
