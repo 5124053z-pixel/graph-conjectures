@@ -2096,6 +2096,46 @@ graph all five Hamiltonicity certificates correctly decline, and the in-range
 claims (`n ≤ 8`) were all literally true. The failure was entirely in not
 reading the source list.
 
+## Result: conjecture 144 is true for girth at most 3
+
+> **WOWII 144.** *`tree(G) ≥ girth(G) − 1 + ecc(Centers(G))`.*
+
+The whole regime turns on one elementary fact about centres that appears not to
+be written down anywhere.
+
+> **Lemma.** `diam(G) ≥ 1 + ecc(Centers(G))` for every connected graph on at
+> least two vertices.
+>
+> *Proof.* Let `C` be the centre, `r = rad(G)`, and let `v` attain
+> `k = ecc(C) = dist(v, C)`.
+>
+> If `k = 0` the claim is `diam ≥ 1`, true since `G` is connected on `≥ 2`
+> vertices.
+>
+> If `k ≥ 1` then `v` is **not** a centre, so `ecc(v) > r` and hence
+> `diam ≥ ecc(v) ≥ r + 1`. And for any `c ∈ C`, `dist(v,c) ≤ ecc(c) = r`, so
+> `k ≤ r`. Therefore `diam ≥ r + 1 ≥ k + 1`. ∎
+
+**Corollary.** If `G` contains a triangle then
+
+    tree(G) ≥ diam + 1 ≥ 2 + ecc(Centers) = girth − 1 + ecc(Centers),
+
+the first step because a shortest path is an induced tree. Forests are trivial
+(`tree = n`, right-hand side `ecc(C) − 1`). So **144 holds for every connected
+graph of girth ≤ 3** — 930 of the 995 graphs in range, and a complete proof for
+the regime rather than a verification.
+
+Zero violations of the lemma over the 12,112 connected graphs on ≤ 8 vertices.
+
+**What is left, precisely.** Girth `≥ 4`, where the target `(g−1) + ecc(C)`
+outruns what a shortest path supplies. The obstruction is concrete: **a shortest
+cycle need not be eccentric enough.** On 24 of the 309 graphs of girth ≥ 4 on at
+most 8 vertices — the smallest on 6 — *no* shortest cycle `C` has
+`ecc(C) ≥ ecc(Centers)`, so the cycle-path construction cannot reach the target
+on its own. The conjecture measures eccentricity from the **centre**; every
+construction here starts at the **cycle**. Closing it means relating those two,
+or building from the centre outward.
+
 ## How likely is any of the rest to be proved
 
 Asked directly, and worth answering with numbers rather than encouragement.
