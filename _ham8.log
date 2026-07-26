@@ -1,0 +1,27 @@
+the four Hamiltonian-path conjectures over the 12112 connected graphs on 2..8 vertices
+
+every certificate is checked against the truth first
+   Chvatal-Erdos                            violations 0
+   Ore                                      violations 0
+   Ls <= 2                                  violations 0
+   Bondy-Chvatal closure of G join K1       violations 0
+   Chvatal degree condition on G join K1    violations 0
+
+    conj  applicable  residual
+     194        5621        19
+     198         516        16
+     200         671         0   <-- settled in range
+     217        4013         0   <-- settled in range
+
+which certificate carries each conjecture
+    conj   Chvatal-Erdos             Ore         Ls <= 2  Bondy-Chvatal   Chvatal degree
+     194            4998            1410               8            5559            4762
+     198             431             343               8             499             463
+     200             648             459               4             670             665
+     217            3622            1096              13            4002            3786
+
+the easy obstruction never appears
+   #194: applicable graphs with a bad vertex cut: 0
+   #198: applicable graphs with a bad vertex cut: 0
+   #200: applicable graphs with a bad vertex cut: 0
+   #217: applicable graphs with a bad vertex cut: 0

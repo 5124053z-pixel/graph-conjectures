@@ -1,0 +1,21 @@
+  n = 2:       2 graphs (expect       2),       1 connected (expect       1)   OK   [0.0s]
+  n = 3:       4 graphs (expect       4),       2 connected (expect       2)   OK   [0.0s]
+  n = 4:      11 graphs (expect      11),       6 connected (expect       6)   OK   [0.0s]
+  n = 5:      34 graphs (expect      34),      21 connected (expect      21)   OK   [0.0s]
+  n = 6:     156 graphs (expect     156),     112 connected (expect     112)   OK   [0.2s]
+  n = 7:   1,044 graphs (expect    1044),     853 connected (expect     853)   OK   [1.9s]
+  n = 8:  12,346 graphs (expect   12346),  11,117 connected (expect   11117)   OK   [32.1s]
+all 12112 connected graphs on 2..8 vertices
+
+  #2    Ls(G) >= 2*(l_avg - 1)                               applicable 12112  holds 12112
+  #19   floor(avg ecc + max l(v)) <= b(G)                    applicable 12112  holds 12112
+  #40   f(G) >= ceil((p(G)+b(G)+1)/2)                        applicable 12112  holds 12112
+  #65   distMin(A) + ceil(distMin(M)/3) <= f(G)              applicable 12112  holds 12112
+  #100  alpha <= ceil((max l(v) + 0.5*||deg(Gc)||_2)/2)      applicable 10627  holds 10627
+  #133  rad + floor(l_avg)^cC4 <= path(G)                    applicable 12112  holds 12112
+  #142  (2/3)girth + eccSet(B) <= tree(G)                    applicable 12112  holds 12112
+  #146  2*eccSet(B) <= tree(G)*radius(G^2)                   applicable 12112  holds 12112
+  #160  max l(v) + maxTri*countInducedC4 <= Ls(G)            applicable 12112  holds  3127   !! 8985 violations, smallest on 5 vertices -- SUSPECT THE CODE
+        n=5: [(0, 2), (0, 3), (0, 4), (1, 2), (1, 3), (1, 4), (2, 4), (3, 4)]
+        n=5: [(0, 2), (0, 3), (0, 4), (1, 3), (1, 4), (2, 3), (2, 4)]
+  #217  Ls(G) <= 4*[residue==2]+2  =>  Hamiltonian path      applicable  4013  holds  4013

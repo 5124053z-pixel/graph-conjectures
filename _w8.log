@@ -1,0 +1,21 @@
+  n = 2:       2 graphs (expect       2),       1 connected (expect       1)   OK   [0.0s]
+  n = 3:       4 graphs (expect       4),       2 connected (expect       2)   OK   [0.0s]
+  n = 4:      11 graphs (expect      11),       6 connected (expect       6)   OK   [0.0s]
+  n = 5:      34 graphs (expect      34),      21 connected (expect      21)   OK   [0.0s]
+  n = 6:     156 graphs (expect     156),     112 connected (expect     112)   OK   [0.2s]
+  n = 7:   1,044 graphs (expect    1044),     853 connected (expect     853)   OK   [2.1s]
+  n = 8:  12,346 graphs (expect   12346),  11,117 connected (expect   11117)   OK   [48.8s]
+all 12112 connected graphs on 2..8 vertices
+
+  #59   f(G) >= ceil(sqrt(residue*b))                        applicable 12112  holds 12112
+  #61   f(G) >= residue(G) + ceil(diam/3)                    applicable 12112  holds 12112
+  #141  tree(G) >= floor(girth/2) - 1 + max l(v)             applicable 12112  holds 12112
+  #144  tree(G) >= girth - 1 + ecc(center)                   applicable 12112  holds 12112
+  #145  2*eccSet(B) <= tree(G) * lMin(complement)            applicable 10860  holds 10860
+  #194  alpha <= 1 + l_avg  =>  Hamiltonian path             applicable  5621  holds  5621
+  #198  b(G) <= 2 + avg ecc  =>  Hamiltonian path            applicable   516  holds   516
+  #200  tree(G) == ceil(1+l_avg)  =>  Hamiltonian path       applicable   671  holds   671
+  #291  gamma_t <= HH-zero-step + freq(min triangles)        applicable 12111  holds 12111
+  #314  triangle-free, induced path <= 4  =>  well totally dominated applicable    81  holds    81
+  #316  avgdeg(complement) <= #pendants  =>  well totally dominated applicable    37  holds    37
+  #322  n>=5, every l(v)<=1  =>  well totally dominated      applicable     4  holds     4
