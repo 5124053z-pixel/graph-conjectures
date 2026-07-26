@@ -172,6 +172,28 @@ def b_rad_path(g):
     return 2 * nx.radius(g) - 1
 
 
+def b_alpha_diam3(g):
+    """f(G) >= alpha(G) + floor(diam/3).
+
+    *** NOT PROVED. *** Zero violations over the 12,112 connected graphs on at
+    most 8 vertices, over paths, cycles, grids, hypercubes, Petersen, Heawood,
+    complete bipartite graphs and caterpillars up to 25 vertices, and over 114
+    random connected graphs on 9..13 vertices; a targeted hill-climb up to 11
+    vertices reaches equality but no violation.
+
+    What *is* proved is weaker. For an independent set I and a set X whose
+    members are pairwise at distance at least 3, no two members of X share a
+    neighbour, so G[I u X] is a disjoint union of stars centred at X -- a
+    forest -- giving f(G) >= alpha + |X \ I|. A shortest path supplies a
+    3-packing of size floor(d/3) + 1, but a maximum independent set can eat
+    most of it, and the best guaranteed remainder is about (d+1)/6.
+
+    Kept out of the default bound lists for that reason. Conjecture 200 was
+    "settled in range" over 12,112 graphs and is false at 11 vertices; an
+    unproved bound with the same evidence deserves the same suspicion."""
+    return W.indep_number(g) + nx.diameter(g) // 3
+
+
 def b_half_bipartite(g):
     """f(G) >= b(G)/2 + 1 for connected G on more than one vertex.
 

@@ -2096,6 +2096,60 @@ graph all five Hamiltonicity certificates correctly decline, and the in-range
 claims (`n ≤ 8`) were all literally true. The failure was entirely in not
 reading the source list.
 
+## Conjecture 61: a four-case analysis, and an unproved linchpin
+
+> **WOWII 61.** *`f(G) ≥ residue(G) + ⌈diam(G)/3⌉`.*
+
+| case | graphs (of 12,112) | why |
+|---|---|---|
+| `diam ≤ 3` | 10,845 | `f ≥ α+1 ≥ residue+1 = rhs` |
+| `diam ≥ 4`, `3 ∣ diam` | 13 | `⌈d/3⌉ = ⌊d/3⌋`, so `rhs ≤ α + ⌊d/3⌋ ≤ f` |
+| `diam ≥ 4`, `3 ∤ diam`, `residue < α` | 903 | `residue + ⌈d/3⌉ ≤ (α−1) + ⌊d/3⌋ + 1 = α + ⌊d/3⌋ ≤ f` |
+| `diam ≥ 4`, `3 ∤ diam`, `residue = α` | 351 | 279 fall to `f ≥ diam+1`, 6 are forests (`f = n`) |
+
+**Residual 66** — all with `diam = 4` and `residue = α`, all holding. That is
+**99.46%** of the corpus.
+
+> ### ⚠ Three of those four cases rest on a bound that is not proved
+>
+> `f(G) ≥ α(G) + ⌊diam/3⌋` has zero violations over the 12,112 graphs, over
+> paths, cycles, grids, hypercubes, Petersen, Heawood, complete bipartite graphs
+> and caterpillars to 25 vertices, over 114 random connected graphs on 9–13
+> vertices, and a targeted hill-climb to 11 vertices reaches **equality** but no
+> violation. **It is still not proved.**
+>
+> What *is* proved is weaker: for an independent `I` and a set `X` pairwise at
+> distance ≥ 3, no two members of `X` share a neighbour, so `G[I ∪ X]` is a
+> disjoint union of stars — a forest — giving `f ≥ α + |X ∖ I|`. A shortest path
+> supplies a 3-packing of size `⌊d/3⌋+1`, but **a maximum independent set can
+> eat most of it**, and the best guaranteed remainder is about `(d+1)/6`, which
+> is not enough.
+>
+> Conjecture 200 was "settled in range" over these same 12,112 graphs and is
+> false at 11 vertices. An unproved bound with the same evidence gets the same
+> suspicion, and it is kept out of the default bound lists.
+
+## The minimal sufficient bound set, per conjecture
+
+A pile of bounds covering a conjecture says little; "these `k` inequalities imply
+it" is a reduction. Exhaustive subset search over the structural bounds, all
+12,112 graphs:
+
+| conj | bounds needed | which |
+|---|---|---|
+| **19** | **1** | `α + α(G−I)` |
+| 40 | 2 | caterpillar-independent, `f ≥ tree` |
+| 61 | 2 | `diam+1`, caterpillar-independent |
+| 141 | 2 | neighbourhood star, caterpillar |
+| 142 | 3 | `diam+1`, caterpillar, one-vertex-off |
+| 144 | 3 | `diam+1`, caterpillar, cycle-path |
+| 2, 59, 133, 145, 146 | — | structural residual 32, 14, 1, 75, 96: **no subset works** |
+
+The split is sharp and it is the same one as before: six conjectures reduce to
+two or three explicit inequalities, and five do not reduce at all. **146 is in
+the second group and has since been proved by someone else**, which is the
+clearest evidence available that the free-bound route was not the one for it.
+
 ## Result: conjecture 19 reduces to a single inequality
 
 > **WOWII 19.** *`b(G) ≥ ⌊avg_ecc(G) + max_v l(v)⌋`, `b` the bipartite number.*

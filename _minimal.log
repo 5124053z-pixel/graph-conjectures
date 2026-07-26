@@ -1,0 +1,13 @@
+12112 connected graphs on 2..8
+
+   #2    structural residual 32 -- no subset works
+   #19   needs 1: ['two-indep']
+   #40   needs 2: ['cat-indep', 'tree']
+   #59   structural residual 14 -- no subset works
+   #61   needs 2: ['diam+1', 'cat-indep']
+   #133  structural residual 1 -- no subset works
+   #141  needs 2: ['star', 'caterpillar']
+   #142  needs 3: ['diam+1', 'caterpillar', '1-vertex-off']
+   #144  needs 3: ['diam+1', 'caterpillar', 'cyclepath']
+   #145  structural residual 75 -- no subset works
+   #146  structural residual 96 -- no subset works
