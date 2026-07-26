@@ -2096,6 +2096,39 @@ graph all five Hamiltonicity certificates correctly decline, and the in-range
 claims (`n ≤ 8`) were all literally true. The failure was entirely in not
 reading the source list.
 
+## Result: conjecture 19 reduces to a single inequality
+
+> **WOWII 19.** *`b(G) ≥ ⌊avg_ecc(G) + max_v l(v)⌋`, `b` the bipartite number.*
+
+> **Lemma.** `b(G) ≥ α(G) + α(G − I)` for `I` a maximum independent set.
+>
+> *Proof.* `I` and a maximum independent set `J` of `G − I` are disjoint
+> independent sets, so every edge of `G[I ∪ J]` runs between them — bipartite. ∎
+
+**That one bound settles the conjecture on all 12,112 connected graphs on at
+most 8 vertices.** Residual 0, no case analysis on girth or diameter — unlike
+142 and 144, which each needed a regime split. So conjecture 19 follows from
+
+    α(G) + α(G − I)  ≥  avg_ecc(G) + max_v l(v).
+
+**Why that is worth having: it removes `b(G)`.** The bipartite number is the
+expensive, badly behaved side — no useful formula, exponential to compute —
+while the left is two independence numbers with a large literature and a greedy
+reading.
+
+**Where it is tight: paths.** For `P_n` the left side is `n` (because `G − I` is
+independent) and the right is about `3(n−1)/4 + 2`; they meet near `n = 8` and
+separate after. So the inequality nearly fails exactly where average
+eccentricity is largest relative to order, and a proof has to spend its effort
+there — the mechanism it needs being that large average eccentricity forces
+sparseness, hence a large `I` and a large `J`.
+
+It is **sufficient, not equivalent**: `b(G)` can exceed `α + α(G−I)`, so
+refuting the reduced inequality would not refute conjecture 19.
+
+For comparison, DeLaViña's own note of 22 June 2005 settles 19 when
+`avg_ecc ≤ diam − 1` — **3%** of the graphs in range.
+
 ## Result: conjecture 145 is proved except for one shape
 
 > **WOWII 145.** *`2·ecc(B) ≤ tree(G)·lMin(Ḡ)`, `B` the periphery.*
