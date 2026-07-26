@@ -2139,6 +2139,25 @@ reading the source list.
 > false at 11 vertices. An unproved bound with the same evidence gets the same
 > suspicion, and it is kept out of the default bound lists.
 
+### The reduced inequality for 19 survives a hunt, but only just
+
+Hill-climbing on `⌊avg_ecc + max l⌋ − (α + α(G−I))` over 9–15 vertices found no
+counterexample. It reached **margin 0 — equality — at every order from 9 to 15**,
+which is the honest headline: the reduced inequality is *tight everywhere*, not
+comfortable. Over the 12,112 exhaustive graphs the slack distribution is
+
+```
+ slack 0 : 4,839 graphs   (40%)
+ slack 1 : 6,448
+ slack 2 :   825
+```
+
+Equality 40% of the time is a delicate statement, and a delicate statement that
+happens to be true is exactly what a Graffiti conjecture is. The reduction is
+sound — `b(G) ≥ α + α(G−I)` is proved — but it does not make the conjecture
+*easier* so much as **restate it without the bipartite number**, which is
+progress of a specific and limited kind.
+
 ## The minimal sufficient bound set, per conjecture
 
 A pile of bounds covering a conjecture says little; "these `k` inequalities imply
