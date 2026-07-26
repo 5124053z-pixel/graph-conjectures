@@ -1,56 +1,73 @@
-"""Written on the Wall II, Conjecture 141 — proved.
+"""Written on the Wall II, Conjecture 141 — proved, in its original form.
 
-    WOWII 141. For a simple connected graph G,
-        tree(G)  >=  floor(girth(G)/2) - 1 + max_v l(v),
-    where tree(G) is the order of a largest induced tree, l(v) = alpha(G[N(v)])
-    is the local independence number, and girth is 0 for an acyclic graph.
+    WOWII 141 (DeLaVina's list, July 19 2005). For a simple connected graph G,
+        tree(G)  >=  (1/2)*girth(G) - 1 + max_v l(v),
+    where tree(G) is the order of a largest induced tree and l(v) = alpha(G[N(v)])
+    is the local independence number.
 
-Formalised as open in `WrittenOnTheWallII/GraphConjecture141.lean`
-(`category research open`).
+**A correction.** An earlier version of this file proved the statement as it
+appears in `WrittenOnTheWallII/GraphConjecture141.lean`, which reads
 
-    THEOREM. The conjecture is true.
+        tree(G) >= floor(girth(G)/2) - 1 + max_v l(v).
 
-Two constructions, one for each range of the girth.
+For *odd* girth those differ: the original asks for half the girth, the
+formalisation for its floor, and the original is stronger by 1 after rounding.
+On C_7 the old argument delivered 4 where the original needs 4.5, i.e. 5. So
+the old proof established the weaker reading only. Both gaps -- at girth 5 and
+at odd girth >= 7 -- are closed below, and the result now covers the original.
 
-**Case 1: girth <= 5** (including acyclic, where girth is 0 by the convention).
-Then floor(g/2) - 1 <= 1, so it is enough to produce an induced tree of order
-1 + max_v l(v).
+    THEOREM. The conjecture is true, in the original (1/2)*girth form.
+
+Write g for the girth, r = floor(g/2) - 1, Delta for the maximum degree. Note
+that for g >= 4 the graph is triangle-free, so N(v) is independent and
+l(v) = deg(v), giving max_v l(v) = Delta.
 
     LEMMA A. tree(G) >= 1 + max_v l(v).
     Proof. Pick v attaining the maximum and let S be a maximum independent set
-    of G[N(v)], so |S| = l(v). In G[{v} ∪ S] the only edges join v to S, since S
-    is independent, so the induced graph is a star centred at v -- a tree of
-    order 1 + l(v). QED
+    of G[N(v)]. In G[{v} u S] the only edges join v to S, so it is a star
+    centred at v -- a tree of order 1 + l(v). QED
 
-**Case 2: girth g >= 6.** Then G is triangle-free, so N(v) is independent for
-every v, hence l(v) = deg(v) and max_v l(v) = Delta.
+    LEMMA B. If g >= 5 then tree(G) >= 2 + max_v l(v).
+    Proof. As above, plus one more step. Girth >= 5 means no two neighbours of
+    v share a neighbour other than v, so a vertex w at distance 2 from v is
+    adjacent to exactly one member of N(v); adding w to the star keeps it
+    induced and a tree. Such a w exists because a graph of girth >= 5 with a
+    cycle is not a star. QED
 
-Put r = floor(g/2) - 1 (so r >= 2), and let v have degree Delta.
+    LEMMA C. If g >= 6 then tree(G) >= Delta + floor(g/2).
+    Proof. Take v of degree Delta and consider the ball B(v, r).
 
-    (a) *B(v, r) induces a tree.* Any cycle inside a ball of radius r has length
-    at most 2r + 1: a cycle in the induced subgraph contains an edge xy that is
-    not in the BFS tree from v, and its fundamental cycle has length at most
-    dist(v,x) + dist(v,y) + 1 <= 2r + 1. Here
-    2r + 1 = 2*floor(g/2) - 1, which is g - 1 for even g and g - 2 for odd g,
-    in both cases strictly less than the girth. So there is no cycle.
+    (a) *B(v,r) induces a tree.* A cycle inside a ball of radius r has length
+    at most 2r+1: it contains an edge xy outside the BFS tree from v, whose
+    fundamental cycle has length at most dist(v,x) + dist(v,y) + 1 <= 2r+1.
+    Here 2r+1 = 2*floor(g/2) - 1, which is g-1 for even g and g-2 for odd g --
+    below the girth either way.
 
-    (b) *|B(v, r)| >= Delta + r.* Since B(v,r) induces a tree and G has a cycle,
-    B(v,r) is not all of G, so ecc(v) > r and there is a vertex at every
-    distance 1, ..., r from v. Counting v, its Delta neighbours and one vertex
-    at each distance 2, ..., r gives 1 + Delta + (r - 1) = Delta + r.
+    (b) *B(v,r) is not all of V*, since it induces a tree while G has a cycle.
+    So ecc(v) > r and every level 1, ..., r is nonempty, giving
+    |B(v,r)| >= 1 + Delta + (r-1) = Delta + r.
 
-Therefore tree(G) >= Delta + r = max_v l(v) + floor(g/2) - 1. QED
+    (c) *One more vertex.* If |B(v,r)| >= Delta + r + 1 we are done, since
+    floor(g/2) = r + 1. Otherwise |B(v,r)| = Delta + r, and as levels 2..r
+    contribute r-1 vertices in total with each nonempty, **each of those levels
+    holds exactly one vertex**. In particular level r is a single vertex z. By
+    (b) there is a vertex y at distance r+1 from v; every neighbour of y at
+    distance <= r lies at level r, so y is adjacent to z and to nothing else in
+    B(v,r). Then B(v,r) u {y} is an induced tree of order Delta + r + 1. QED
 
-**On what is and is not new here.** Both ingredients are standard --
-"neighbourhood star" and "balls of small radius are locally tree-like" are
-textbook. What appears not to have been done is putting them against this
-statement. That is the shape of everything that worked in this project: the
-conjecture had been sitting on a list since Graffiti.pc produced it, and nobody
-had checked whether two elementary constructions cover its two regimes.
+The three lemmas cover the three ranges, and they meet exactly:
 
-The split point is forced. Lemma A alone gives the conjecture exactly when
-floor(g/2) - 1 <= 1, i.e. g <= 5, and the ball construction needs r >= 2, i.e.
-g >= 6. The two ranges meet with nothing between them.
+    girth 0 (acyclic) or 3 or 4:  (1/2)g - 1 <= 1, so Lemma A suffices.
+    girth 5:                      (1/2)g - 1 = 1.5, needs 2 + max l -- Lemma B.
+    girth >= 6:                   (1/2)g - 1 <= floor(g/2), and max l = Delta,
+                                  so Lemma C suffices. QED
+
+**What the correction cost, and why it was invisible.** The floor version and
+the original agree for even girth, and graphs of odd girth at least 7 are rare:
+there are exactly **two** among the 12,112 connected graphs on at most 8
+vertices. An exhaustive check in that range cannot distinguish the two
+readings, and the write-up cited the Lean file, so nothing in the loop pointed
+at the gap. It surfaced only on reading DeLaVina's original page.
 """
 from __future__ import annotations
 
@@ -67,82 +84,104 @@ def max_l(g):
     return max(local_independence(g, v) for v in g)
 
 
-def rhs(g):
+def rhs_original(g):
+    """The statement as DeLaVina published it."""
+    return girth(g) / 2 - 1 + max_l(g)
+
+
+def rhs_lean(g):
+    """The statement as formalised, weaker at odd girth."""
     return girth(g) // 2 - 1 + max_l(g)
 
 
 def ball(g, v, r):
-    return list(nx.single_source_shortest_path_length(g, v, cutoff=r).keys())
+    return list(nx.single_source_shortest_path_length(g, v, cutoff=r))
 
 
-def star_bound(g):
-    """Lemma A's witness: 1 + max_v l(v)."""
+def bound_star(g):
+    """Lemma A."""
     return 1 + max_l(g)
 
 
-def ball_bound(g):
-    """Case 2's witness: the largest ball of radius floor(g/2) - 1 around a
-    maximum-degree vertex. Returns None when the girth is below 6."""
+def bound_two_step(g):
+    """Lemma B, valid for girth >= 5."""
+    return 2 + max_l(g) if girth(g) >= 5 else None
+
+
+def bound_ball(g):
+    """Lemma C, valid for girth >= 6."""
     gi = girth(g)
     if gi < 6:
         return None
-    r = gi // 2 - 1
-    D = max(d for _, d in g.degree())
-    return max(len(ball(g, v, r)) for v in g if g.degree(v) == D)
+    return max(d for _, d in g.degree()) + gi // 2
 
 
 def main():
-    print("WOWII 141:  tree(G) >= floor(girth/2) - 1 + max_v l(v)\n")
+    print("WOWII 141:  tree(G) >= (1/2)*girth - 1 + max_v l(v)   (original form)\n")
 
     graphs = [g for g in nx.graph_atlas_g()
               if 2 <= g.number_of_nodes() <= 7 and nx.is_connected(g)]
-    named = [("Petersen", nx.petersen_graph()),
-             ("Heawood", nx.heawood_graph()),
+    named = [("Petersen", nx.petersen_graph()), ("Heawood", nx.heawood_graph()),
              ("Moebius-Kantor", nx.moebius_kantor_graph()),
-             ("Pappus", nx.pappus_graph()),
-             ("Desargues", nx.desargues_graph()),
+             ("Pappus", nx.pappus_graph()), ("Desargues", nx.desargues_graph()),
+             ("McGee (girth 7)", nx.LCF_graph(24, [12, 7, -7], 8)),
+             ("Tutte-Coxeter (girth 8)",
+              nx.LCF_graph(30, [-13, -9, 7, -7, 9, 13], 5)),
              ("C_7", nx.cycle_graph(7)), ("C_9", nx.cycle_graph(9)),
-             ("C_12", nx.cycle_graph(12)), ("C_20", nx.cycle_graph(20)),
+             ("C_13", nx.cycle_graph(13)),
              ("4x4 grid", nx.grid_2d_graph(4, 4)),
-             ("6x6 grid", nx.grid_2d_graph(6, 6)),
              ("Q_4", nx.hypercube_graph(4))]
     named = [(n, nx.convert_node_labels_to_integers(g)) for n, g in named]
 
-    print("LEMMA A  tree(G) >= 1 + max_v l(v)   (the neighbourhood star)")
-    bad = [g for g in graphs if largest_induced_tree(g) < star_bound(g)]
-    print(f"   violations over {len(graphs)} connected graphs on <= 7 vertices: "
-          f"{len(bad)}")
-    low = [g for g in graphs if girth(g) <= 5]
-    print(f"   settles the conjecture for girth <= 5: {len(low)}/{len(graphs)} "
-          f"graphs, all hold: "
-          f"{all(largest_induced_tree(g) >= rhs(g) for g in low)}")
+    print("the two readings differ only at odd girth")
+    odd = [g for g in graphs if girth(g) % 2 == 1 and girth(g) >= 7]
+    print(f"   connected graphs on <= 7 vertices with odd girth >= 7: {len(odd)}")
+    print(f"   -- which is why an exhaustive check could not see the gap\n")
 
-    print("\nCASE 2  girth >= 6: the ball of radius floor(g/2) - 1 around a")
-    print("        maximum-degree vertex induces a tree of order >= Delta + r")
-    print(f"   {'graph':<16} {'g':>2} {'r':>2} {'Delta':>5} {'rhs':>4} "
-          f"{'|ball|':>7}  induces a tree?")
-    ok = True
-    for name, g in named:
+    print("LEMMA A  tree >= 1 + max l(v)")
+    print(f"   violations: {sum(1 for g in graphs if largest_induced_tree(g) < bound_star(g))}")
+    print("LEMMA B  girth >= 5  =>  tree >= 2 + max l(v)")
+    print(f"   violations: {sum(1 for g in graphs if girth(g) >= 5 and largest_induced_tree(g) < bound_two_step(g))}")
+    print("LEMMA C  girth >= 6  =>  tree >= Delta + floor(girth/2)")
+    print(f"   violations: {sum(1 for g in graphs if girth(g) >= 6 and largest_induced_tree(g) < bound_ball(g))}")
+
+    print("\nthe structural claims Lemma C rests on")
+    bad_tree = bad_level = 0
+    for g in graphs + [x for _, x in named]:
         gi = girth(g)
         if gi < 6:
             continue
         r = gi // 2 - 1
         D = max(d for _, d in g.degree())
-        trees = all(nx.is_tree(g.subgraph(ball(g, v, r))) for v in g)
-        bb = ball_bound(g)
-        ok &= trees and bb >= rhs(g)
-        print(f"   {name:<16} {gi:>2} {r:>2} {D:>5} {rhs(g):>4} {bb:>7}  {trees}")
-    small6 = [g for g in graphs if girth(g) >= 6]
-    for g in small6:
-        gi = girth(g)
-        r = gi // 2 - 1
-        trees = all(nx.is_tree(g.subgraph(ball(g, v, r))) for v in g)
-        ok &= trees and ball_bound(g) >= rhs(g)
-    print(f"   plus the {len(small6)} small graphs of girth >= 6")
-    print(f"   every case: ball induces a tree and reaches the bound: {ok}")
+        for v in g:
+            if g.degree(v) != D:
+                continue
+            lev = {}
+            for u, dist in nx.single_source_shortest_path_length(g, v, cutoff=r).items():
+                lev.setdefault(dist, []).append(u)
+            B = [u for L in lev.values() for u in L]
+            if not nx.is_tree(g.subgraph(B)):
+                bad_tree += 1
+            if len(B) == D + r and any(len(lev.get(i, [])) != 1 for i in range(2, r + 1)):
+                bad_level += 1
+    print(f"   (a) the ball of radius floor(g/2)-1 induces a tree : {bad_tree == 0}")
+    print(f"   (c) when |B| = Delta + r each level 2..r is a single vertex : "
+          f"{bad_level == 0}")
 
-    print(f"\nboth cases verified; the two ranges g <= 5 and g >= 6 are "
-          f"exhaustive.")
+    print(f"\n   {'graph':<26} {'g':>2} {'tree':>5} {'original':>9} {'proved':>7}  ok")
+    for name, g in named:
+        gi = girth(g)
+        proved = (bound_ball(g) if gi >= 6
+                  else bound_two_step(g) if gi == 5 else bound_star(g))
+        print(f"   {name:<26} {gi:>2} {largest_induced_tree(g):>5} "
+              f"{rhs_original(g):>9.1f} {proved:>7}  "
+              f"{'yes' if proved >= rhs_original(g) else 'NO'}")
+
+    ok = all((bound_ball(g) if girth(g) >= 6
+              else bound_two_step(g) if girth(g) == 5
+              else bound_star(g)) >= rhs_original(g)
+             for g in graphs + [x for _, x in named])
+    print(f"\n   the three lemmas cover the original statement everywhere: {ok}")
 
 
 if __name__ == "__main__":

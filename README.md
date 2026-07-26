@@ -1048,7 +1048,20 @@ the strongest possible one, collapsing the statement to a single family. Of the
 Checking what a hypothesis actually admits, before spending a search budget on
 it, is cheap.
 
-## Result: conjecture 141 is true — the first non-trivial one
+## Result: conjecture 141 is true — in its original, stronger form
+
+> **Correction.** What was proved first was the statement *as formalised in
+> Lean*, `tree(G) ≥ ⌊girth/2⌋ − 1 + max_v l(v)`. DeLaViña's original asks for
+> `(1/2)·girth`, which for **odd** girth is stronger by 1 after rounding — on
+> `C₇` the old argument gave 4 where the original needs 4.5, i.e. 5. Two gaps
+> had to be closed, at girth 5 and at odd girth ≥ 7; both are, and the result
+> below now covers the original. The gap was invisible to computation: exactly
+> **two** of the 12,112 connected graphs on ≤ 8 vertices have odd girth ≥ 7, so
+> no exhaustive check in range can tell the two readings apart. See
+> `wowii141.py` for the corrected proof — the extra ingredient is counting the
+> ball more carefully, plus one vertex at distance `r+1` in the tight case.
+
+### The original proof (of the weaker, formalised reading)
 
 > **WOWII 141.** *`tree(G) ≥ ⌊girth(G)/2⌋ − 1 + max_v l(v)`, with `tree(G)` the
 > order of a largest induced tree and `l(v) = α(G[N(v)])`.*
@@ -1883,7 +1896,7 @@ has `Ḡ`-degree at least `α − t`, so
 Large `t` helps the first term of the right-hand side, small `t` helps the
 second. Working that seesaw is what would push the threshold below 16.
 
-## The four Hamiltonian-path conjectures: 200 and 217 settled in range
+## The four Hamiltonian-path conjectures — and 200 is false
 
 > **194.** `α ≤ 1 + l_avg` ⟹ Hamiltonian path
 > **198.** `b(G) ≤ 2 + avg ecc` ⟹ Hamiltonian path
@@ -1936,16 +1949,23 @@ adds raises degrees and lets it add more — and it alone covers 497 of 194's 50
 ### What that says about the conjectures
 
 **These hypotheses are not saying anything new about Hamiltonicity.** They are
-roundabout ways of asserting a condition Bondy and Chvátal covered in 1976. That
-is the useful output, because it changes the proof to attempt:
+roundabout ways of asserting a condition Bondy and Chvátal covered in 1976.
 
-> not `hypothesis ⟹ a Hamiltonian path can be constructed`
-> but `hypothesis ⟹ the closure of G ∨ K₁ is complete`.
+> ### ⚠ The proof target proposed here for 200 cannot exist
+>
+> This section originally concluded that the thing to prove was
+> `hypothesis ⟹ the closure of G ∨ K₁ is complete`, and that for **200** the
+> sharper target `tree(G) = ⌈1 + l_avg⌉ ⟹ Chvátal's condition on G ∨ K₁` would
+> do it. **Conjecture 200 is false.** Jitendra Prajapati found an 11-vertex
+> counterexample on 21 July 2026, `graph6 J??FFBRq}N_`, verified in
+> `wowii_status.py`: `tree(G) = ⌈1 + l_avg⌉ = 4` and there is no Hamiltonian
+> path. The exhaustive range here was 8 vertices, so nothing in the computation
+> could have seen it.
+>
+> The certificates themselves were **not** fooled — on that graph all five
+> correctly decline. The tooling was sound; the literature check was not.
 
-For **200** the target is sharper still: Chvátal's degree condition alone covers
-all 136 applicable graphs, so it suffices to show
-`tree(G) = ⌈1 + l_avg⌉ ⟹ Chvátal's condition on G ∨ K₁` — a statement entirely
-about degree sequences.
+For **217**, still open, the closure target stands.
 
 **The easy obstruction never appears.** No graph satisfying any of the four
 hypotheses has a vertex cut of size `k` leaving more than `k+1` components — the
@@ -2014,6 +2034,79 @@ is that a bound must be *rejected* before the coverage loop can see it. Caught
 within one step by rerunning the real toolkit, whose bound list only ever
 contains validated entries — which is an argument for the toolkit being the only
 path to a coverage number.
+
+## The literature check, done properly — and what it found
+
+The Lean formalisations carry `category research open`. **That tag is not a
+status report.** It records what was believed when the file was written. The
+authoritative source is DeLaViña's own page, split into `resolved.htm` and
+`open.html`, and **still being updated** — two of these conjectures were refuted
+in the week of 21–23 July 2026, days before this check.
+
+Checked 27 July 2026. The page's numbering was matched to the Lean numbering by
+comparing the **statement text of all 22**, not the numbers.
+
+| conj | status per the primary source |
+|---|---|
+| **146** | **PROVED**, 21 Jul 2026, Brain Akaka — a human-readable proof, developed and checked with AI systems, upstreamed as PR 4505 to `formal-conjectures` |
+| **198** | **RESOLVED**, June 2010, Richard Stong (CCR, La Jolla) — *sixteen years* before the Lean file called it open |
+| **200** | **FALSE**, 21 Jul 2026, Jitendra Prajapati — 11-vertex counterexample, `J??FFBRq}N_` |
+| **291** | **FALSE**, 23 Jul 2026, Zyad Tamimi — 12-vertex counterexample |
+| the other 18 | still listed as open |
+
+Both refutations are verified in `wowii_status.py`. **291 was reproduced
+independently**: hill-climbing on `γ_t − (k + freq)` found a *different*
+12-vertex graph with the same profile (`γ_t = 4, k = 2, freq = 1`) and none on
+11 vertices, consistent with 12 being the minimum order.
+
+### What it cost
+
+Effort went into **198**, resolved for sixteen years. Into **146**, proved six
+days earlier — by someone using the same combination this project uses, a
+human-readable argument developed with AI assistance. And into pushing **200**
+and **217** as a pair, concluding that the proof to attempt was
+`hypothesis ⟹ the Bondy–Chvátal closure is complete`. For 200 that proof cannot
+exist.
+
+The consolation is narrow but real: **the tooling never lied.** On Prajapati's
+graph all five Hamiltonicity certificates correctly decline, and the in-range
+claims (`n ≤ 8`) were all literally true. The failure was entirely in not
+reading the source list.
+
+## What went wrong (continued)
+
+**16. Treating a formalisation's `open` tag as a status report.** The whole
+reason for using the Lean list was that Graffiti's own statements are ambiguous,
+and formalisation fixes that. It does — and it was allowed to answer a question
+it was never claiming to answer. `category research open` says the statement was
+open when someone wrote the file. It is not a live index.
+
+The primary source was one HTTP request away and had a page literally named
+`resolved.htm`. It says 198 was settled in **2010**. It carries dates from six
+days before this check.
+
+This is failure **5** again in a new costume. That one was "search for work
+citing the conjecture list, not just the conjectures." The generalisation is
+harsher: **for any curated list of open problems, find who maintains it and read
+their status page first, before any mathematics.** Not at the end as a check —
+first, as the cheapest possible filter. Twenty minutes of reading would have
+redirected the whole Hamiltonian-path effort.
+
+**17. A conjecture was proved in a weaker form than it was stated.** The
+formalisation of 141 uses `⌊girth/2⌋` where DeLaViña's original has
+`(1/2)·girth`. For odd girth the original is stronger, and the proof written
+here did not reach it — on `C₇` it delivered 4 against a requirement of 5.
+
+What makes this one instructive is that **no amount of computation could have
+caught it.** Both readings were verified over all 12,112 connected graphs on at
+most 8 vertices with zero violations, because there are exactly two graphs in
+that range with odd girth ≥ 7, and the bound is slack on both. The two
+statements are computationally indistinguishable in reach and mathematically
+different. Only reading the original found it.
+
+The gap turned out to be closable — see `wowii141.py` — so the result survives,
+stronger than before. But it was proved against a transcription, not against the
+conjecture.
 
 ## Files
 

@@ -1,0 +1,15 @@
+
+structural-bound coverage over 12112 connected graphs on 2..8
+
+    conj  residual n<=7  residual n<=8
+       2              -             32
+      19              -              0
+      40              -              0
+      59              -             14
+      61              -              0
+     133              -              1
+     141              -              0
+     142              -              0
+     144              -              0
+     145              -             75
+     146              -             96
