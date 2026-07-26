@@ -2096,6 +2096,101 @@ graph all five Hamiltonicity certificates correctly decline, and the in-range
 claims (`n ≤ 8`) were all literally true. The failure was entirely in not
 reading the source list.
 
+## How likely is any of the rest to be proved
+
+Asked directly, and worth answering with numbers rather than encouragement.
+
+### The base rate
+
+DeLaViña's page splits into `resolved.htm` (**250** conjectures) and
+`open.html` (**160**). So roughly **61% have fallen in twenty-odd years**, and
+what is left is the residue that survived that filtering. A conjecture still
+open in 2026 is open because the easy things were tried.
+
+Against that, the list is **not dormant**. Two conjectures were refuted in the
+week of 21–23 July 2026 and one was proved on 21 July — and that proof is
+described on the page as "developed and checked collaboratively with AI
+systems". Whatever this project is doing, other people are doing it too, right
+now, and reaching the same conjectures within days.
+
+### What the coverage data actually says
+
+The honest split is **not** "settled in range" versus "open". It is whether the
+*structural* bounds — the ones that are proof material for all graphs — keep up
+as `n` grows. Rerunning the toolkit with the greedy witnesses removed:
+
+| conj | structural residual, `n ≤ 7` | structural residual, `n ≤ 8` |
+|---|---|---|
+| 19, 40, 61, 141, 142, 144 | 0 | **0** |
+| 133 | 1 | 1 |
+| 59 | 2 | 14 |
+| 2 | 9 | 32 |
+| 145 | 0 | **75** |
+| 146 | 0 | **96** |
+
+That table is the whole answer.
+
+**Where the residual stays 0, a proof is plausible.** The bounds already cover
+every graph in reach; what is missing is an argument that the case analysis
+exhausts *all* graphs, which is exactly the shape of the proof that worked for
+141 — two regimes, split at girth 6, and the split point forced. Six
+conjectures sit here. This is the range where I would expect real progress, and
+where I would put maybe **one in three** on a complete proof for any given one
+with sustained effort.
+
+**Where the residual grows, the bounds are not the proof.** For 145 and 146 the
+coverage was 0 at `n ≤ 7` and 75 and 96 at `n ≤ 8` — the free bounds simply
+stop tracking the conjecture. Reading that as "nearly proved" would have been a
+mistake, and it was the one thing the earlier optimism here got wrong. These
+need a genuinely different idea, and **146 has now been proved by someone else
+anyway**, which is the most direct evidence available that the free-bound route
+was not the one.
+
+**The Hamiltonian family should be attacked as false, not proved.** 200 held for
+every one of the 671 applicable graphs on at most 8 vertices, was covered
+completely by classical Hamiltonicity theory in that range, and is **false at
+11**. That is a specific warning about 194, 198a and 217: the same hypotheses,
+the same family, the same behaviour in the same range. `wowii_hunt.py` searches
+9–14 vertices for exactly this.
+
+### The uncomfortable part
+
+**"Settled over all graphs on at most 8 vertices" carries very little
+information about truth.** 200 is the proof: 12,112 graphs, every applicable
+one holding, five independent classical certificates covering all of them — and
+the statement is false. 291 likewise, at 12 vertices. The exhaustive range here
+is not merely small, it is *below the scale at which these conjectures decide
+themselves*, and the counterexamples that exist were found by targeted search,
+not enumeration.
+
+So the realistic breakdown of the 22:
+
+* **6 moved here** — 65, 141, 314, 316, 322 proved; 160 refuted as formalised.
+  Of these, 65 and 322 are trivial once read, 316 is a short counting argument,
+  141 is real but its ingredients are textbook, and 314's `γ_t = 2` half turns
+  out to be published. **The genuinely new mathematics is Part 1 of 314** — the
+  cap `|S| ≤ 3` — and the `α ≥ 16` reduction of 100.
+* **4 moved by others** — 146, 198, 200, 291.
+* **12 left.** Of those, six look reachable by finishing a case analysis, three
+  are Hamiltonian-family statements that may well be false, and three (2, 59,
+  145) need something new.
+
+### What I would do with the next hundred hours
+
+Not more exhaustive computation — the range cannot be pushed far enough to
+matter, and 200 shows what that range is worth. Two things instead:
+
+1. **Finish one case analysis properly**, on 144 or 142, where the structural
+   bounds already cover everything in reach. One complete proof is worth more
+   than twelve partial ones.
+2. **Hunt counterexamples above `n = 8` for the Hamiltonian family.** A
+   counterexample is a definitive result, it is cheap when it exists, and the
+   base rate in that family is now 1 for 1.
+
+The thing not to do is what consumed most of this project's compute: exhaustive
+scans over ranges too small to decide anything, and free bounds accumulated past
+the point where they were still saying something.
+
 ## Attribution of every bound in the toolkit
 
 Run at the same time as the status check, and it moved several entries out of
