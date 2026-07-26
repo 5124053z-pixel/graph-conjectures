@@ -2049,7 +2049,7 @@ comparing the **statement text of all 22**, not the numbers.
 | conj | status per the primary source |
 |---|---|
 | **146** | **PROVED**, 21 Jul 2026, Brain Akaka — a human-readable proof, developed and checked with AI systems, upstreamed as PR 4505 to `formal-conjectures` |
-| **198** | **RESOLVED**, June 2010, Richard Stong (CCR, La Jolla) — *sixteen years* before the Lean file called it open |
+| **198** | **RESOLVED**, June 2010, Richard Stong — but see the note below: the statement implemented here is **198a**, a *different* conjecture, still open |
 | **200** | **FALSE**, 21 Jul 2026, Jitendra Prajapati — 11-vertex counterexample, `J??FFBRq}N_` |
 | **291** | **FALSE**, 23 Jul 2026, Zyad Tamimi — 12-vertex counterexample |
 | the other 18 | still listed as open |
@@ -2061,7 +2061,30 @@ independently**: hill-climbing on `γ_t − (k + freq)` found a *different*
 
 ### What it cost
 
-Effort went into **198**, resolved for sixteen years. Into **146**, proved six
+**198 versus 198a — a reprieve, and a warning.** The page carries both.
+Conjecture **198** asks `b(G) ≤ 2 + ecc_avg(M)` with `M` the *maximum-degree*
+vertices; Stong resolved it in 2010. Conjecture **198a** asks
+`b(G) ≤ 2 + ecc_avg(G)`, averaged over *all* vertices, and is **still open**.
+`conj_198a` implements the second, so that effort was not spent on a settled
+problem. But it was recorded under the label "198" everywhere — in the code, the
+tables, the commit messages — which is exactly how such a confusion propagates,
+and it took reading the source page to notice that the label and the code
+disagreed.
+
+**DeLaViña's own notes carry partial results, and one of them is a bound this
+project derived independently.** Under conjecture 40, dated 6 March 2004:
+`f(G) ≥ b(G)/2 + 1`, with the corollary that 40 follows whenever the path
+covering number is 1 — which is 851 of the 995 graphs in range. It is valid
+(zero violations) and is now in the toolkit, attributed. Under conjecture 19,
+dated 22 June 2005: if `ecc_avg ≤ diam − 1` then 19 follows from WOWII 13 —
+though that covers only 3% of the graphs in range, well short of what the free
+bounds do.
+
+The lesson compounds: **the status page was not the only thing left unread. The
+conjecture entries themselves carry twenty years of accumulated notes**, and
+they are the first place a partial result would already be recorded.
+
+Effort went into **146**, proved six
 days earlier — by someone using the same combination this project uses, a
 human-readable argument developed with AI assistance. And into pushing **200**
 and **217** as a pair, concluding that the proof to attempt was

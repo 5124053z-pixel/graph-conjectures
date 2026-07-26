@@ -172,6 +172,15 @@ def b_rad_path(g):
     return 2 * nx.radius(g) - 1
 
 
+def b_half_bipartite(g):
+    """f(G) >= b(G)/2 + 1 for connected G on more than one vertex.
+
+    Not found here: DeLaVina states it in the note under conjecture 40 on her
+    own page, dated 6 March 2004, together with the corollary that 40 follows
+    whenever the path covering number is 1. Verified with zero violations."""
+    return W.largest_induced_bipartite(g) / 2 + 1
+
+
 # --- witness certificates --------------------------------------------------
 # These differ in kind from everything above. A structural bound (the star, the
 # ball, Gallai) is an ingredient of a proof for *all* graphs. A witness only
@@ -239,7 +248,8 @@ TREE_BOUNDS = [b_acyclic, b_star, b_path, b_cycle, b_caterpillar_cycle,
 FOREST_BOUNDS = [b_acyclic, b_path, b_caterpillar_indep, b_cyclomatic,
                  lambda g: W.indep_number(g) + 1,
                  W.largest_induced_tree]
-FOREST_BOUNDS = FOREST_BOUNDS + [b_one_vertex_off, b_rad_tree, b_exhibit_forest]
+FOREST_BOUNDS = FOREST_BOUNDS + [b_one_vertex_off, b_rad_tree,
+                                 b_exhibit_forest, b_half_bipartite]
 BIPARTITE_BOUNDS = FOREST_BOUNDS + [b_two_indep, W.largest_induced_forest]
 PATH_BOUNDS = [b_path, b_cycle, b_rad_path, b_greedy_path]
 

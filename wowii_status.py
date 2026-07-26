@@ -17,7 +17,9 @@ numbers -- verified by comparing the statement text of all 22, not the numbers.
                     and checked with AI systems; upstreamed as pull request
                     4505 to google-deepmind/formal-conjectures.
     #198  RESOLVED  June 2010, Richard Stong (CCR, La Jolla). Sixteen years
-                    before the Lean file called it open.
+                    before the Lean file called it open. But see below: the
+                    statement implemented here is 198a, a different conjecture,
+                    and 198a is still open.
     #200  FALSE     21 Jul 2026, Jitendra Prajapati. Counterexample on 11
                     vertices, graph6 J??FFBRq}N_. Verified below.
     #291  FALSE     23 Jul 2026, Zyad Tamimi. Counterexample on 12 vertices,
@@ -26,7 +28,15 @@ numbers -- verified by comparing the statement text of all 22, not the numbers.
 
     the other 18 are still listed as open.
 
-**What this cost here.** Work went into 198 (resolved for sixteen years), into
+**198 versus 198a.** The page carries both. Conjecture 198 asks
+b(G) <= 2 + ecc_avg(M) with M the *maximum-degree* vertices, and Stong resolved
+it in 2010. Conjecture 198a asks b(G) <= 2 + ecc_avg(G), averaged over *all*
+vertices, and is still open. `conj_198a` implements the second, so that effort
+was not spent on a settled problem -- but it was recorded under the label "198"
+throughout, which is exactly how such a confusion propagates. The two differ on
+applicability for 19 of the 995 graphs on at most 7 vertices.
+
+**What this cost here.** Work went into
 146 (proved six days earlier), and into pushing 200 and 217 as a pair -- with
 the conclusion that "the proof to attempt is hypothesis => the Bondy-Chvatal
 closure of G join K1 is complete". For 200 that proof cannot exist. The
@@ -47,7 +57,7 @@ STATUS = {
     2: "open", 19: "open", 40: "open", 59: "open", 61: "open", 65: "open",
     100: "open", 133: "open", 141: "open", 142: "open", 144: "open",
     145: "open", 146: "PROVED 2026-07-21 (Akaka)", 160: "open",
-    194: "open", 198: "RESOLVED 2010-06 (Stong)",
+    194: "open", 198: "RESOLVED 2010-06 (Stong); 198a, implemented here, is open",
     200: "FALSE 2026-07-21 (Prajapati)", 217: "open",
     291: "FALSE 2026-07-23 (Tamimi)", 314: "open", 316: "open", 322: "open",
 }
