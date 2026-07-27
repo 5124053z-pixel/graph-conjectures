@@ -2479,10 +2479,20 @@ and works on every one of them:
 > `u` within distance 2 of `v`.
 
 It succeeds on **19 of 19**. What is missing is a proof that such an `a'` always
-exists — the obstruction is `N(v) ⊆ N(b)`, and the general statement
-`girth ≥ 4 and diam ≥ 3 ⟹ tree ≥ 5` is **false**, with exactly two exceptions
-on ≤ 8 vertices. Both have `ecc(Centers) = 1`, so neither intrudes on the case
-that needs them — which is suggestive but not an argument.
+exists — the obstruction is `N(v) ⊆ N(b)` for *every* diametral triple.
+
+**That obstruction is real, and it never lands where it would hurt.** Of the 289
+graphs with `girth ≥ 4` and `diam ≥ 3` on at most 8 vertices, the configuration
+occurs on **46** — so the construction genuinely can fail. But **not one of the
+46 has `ecc(Centers) = 2` with `diam = 3`.** Every one has `ecc(Centers) = 1`,
+which is exactly the sub-case the forcing lemma already settles without needing
+a fifth vertex at all.
+
+So the two sub-cases are disjoint in range: where the construction is needed it
+always works, and where it can fail it is not needed. That is a structural hint
+about why, not a proof that it must be so. The same holds for the general
+statement `girth ≥ 4 and diam ≥ 3 ⟹ tree ≥ 5`, which is **false** with exactly
+two exceptions on ≤ 8 vertices — both again with `ecc(Centers) = 1`.
 
 Likewise `girth ≥ 4 ⟹ diam ≥ 2 + ecc(C)` fails on 22 graphs, and those 22 are
 *exactly* the `ecc(C) = 2, diam = 3` case. The two open sub-cases of girth 4 are
