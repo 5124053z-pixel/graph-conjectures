@@ -2535,8 +2535,9 @@ hypotheses are inequalities the search can steer into — and it is the stronges
 available evidence that the Hamiltonian family does not fall over immediately
 above the exhaustive range, as 200 did.
 
-Conjecture 2 never reaches equality at all, which is a different signal: the
-bound `Ls ≥ 2(l_avg − 1)` has room to spare at these orders.
+Conjecture 2 appeared never to reach equality, which was **wrong** — see the
+correction below. Random-start hill climbing simply never goes near the graphs
+where it is tight.
 
 ## How likely is any of the rest to be proved
 
@@ -2632,6 +2633,89 @@ matter, and 200 shows what that range is worth. Two things instead:
 The thing not to do is what consumed most of this project's compute: exhaustive
 scans over ranges too small to decide anything, and free bounds accumulated past
 the point where they were still saying something.
+
+## Result: conjecture 2 is true for every triangle-free graph
+
+> **WOWII 2.** *`Ls(G) ≥ 2(l_avg(G) − 1)`, `Ls` the maximum leaves over spanning
+> trees, `l_avg` the average local independence.*
+
+> **Master Lemma.** For any acyclic subgraph `F` of a connected `G`,
+> `Ls(G) ≥ 2 + Σ_w (deg_F(w) − 2)⁺`.
+>
+> Extend `F` to a spanning tree; every tree has exactly `2 + Σ(deg−2)⁺` leaves.
+> The project's existing `Ls ≥ Δ` is the special case where `F` is a full star.
+
+> **Theorem A.** `Ls(G) ≥ |N(u) ∪ N(v)| − 2` for any two vertices, and
+> `≥ |N(u) ∪ N(v)| − 1` when `dist(u,v) = 2` — exhibit a double star or a
+> double star joined through the common neighbour, then apply the Master Lemma.
+
+> **Theorem C.** **Conjecture 2 holds for every connected triangle-free graph.**
+>
+> There `l(v) = deg(v)`, so `l_avg = 2m/n`. Theorem A gives
+> `Ls ≥ deg(u) + deg(v) − 2` for every edge, and by Cauchy–Schwarz
+> `max_{uv∈E}(deg u + deg v) ≥ (1/m)Σ_v deg(v)² ≥ 4m/n = 2·l_avg`. ∎
+
+A companion (**Theorem D**) covers graphs where every vertex on a triangle has
+`deg(v) ≤ 1 + 2m/n`, and the two cases are **exhaustive whenever `2m/n ≤ 3`**.
+So the conjecture is proved outright for all triangle-free graphs and all graphs
+of average degree at most 3.
+
+**The reduction.** Conjecture 2 follows from one purely local inequality with no
+spanning tree in it:
+
+    (CC)   max_{uv ∈ E} |N[u] ∪ N[v]|  ≥  2·l_avg(G).
+
+Zero violations over the 12,112 graphs, proved for triangle-free graphs, open in
+general. In range, Case 1 ∪ Case 2 leaves **residual 0 with no witness
+certificate at all** — but their exhaustiveness is not a theorem, and
+hill-climbing finds graphs from `n = 10` where both cases fail (the conjecture
+still holds there, by computation and by nothing proved).
+
+### Correction: conjecture 2 *is* tight
+
+An earlier note here said it never reaches equality. **It does** — on every
+cycle `C_n` (`n ≥ 4`), on every `K_{a,a}`, and on `Q₃`; verified up to `K_{8,8}`
+and `C₂₀`. The `K_{a,b}` slack is exactly `(a−b)²/(a+b)`, so **no additive
+constant can be added to the conjecture**. The wrong reading came from
+random-start hill climbing, which never wanders near those families — a search
+that reports "no equality found" is reporting on its own starting distribution.
+
+## Result: conjecture 59 reduces to an AM–GM strengthening
+
+> **WOWII 59.** *`f(G) ≥ ⌈√(res(G)·b(G))⌉`.*
+
+Since `√(xy) ≤ (x+y)/2`, the conjecture follows from
+
+    (AM-GM)   2·f(G)  ≥  b(G) + res(G).
+
+**Zero violations over the 12,112 graphs**, and over Petersen, Heawood, `C₁₂`,
+`P₁₂`, `Q₄`, `K₈` and the 4×4 grid. **Tight on `K_{a,a}` for every `a`**, where
+`f = a+1`, `b = 2a`, `res = 2` — so it cannot be improved to `2f ≥ b + res + 1`.
+
+This replaces a geometric mean, which no bound in the toolkit interacts with, by
+a linear inequality between three well-studied invariants.
+
+The 14 graphs the structural bounds miss are uniform: **every one has
+`res = α`, `f = α + 2`, girth 3, and holds with equality.** The proved case
+analysis is capped at `α ≤ 4`, and at `n = 11` there is a graph where the
+*bounds* fail while the conjecture holds — the gap grows, as it does for 145 and
+146.
+
+## Working three conjectures in parallel
+
+`wowii2.py` and `wowii59.py` were produced by separate agent instances running
+concurrently with the main thread, each given one conjecture, the repository's
+conventions, and the same standing rules: **validate every candidate bound over
+all 12,112 graphs before relying on it, and state separately what is proved,
+what is verified, and what is neither.**
+
+Both stalled once on stream errors and were resumed. Every headline claim was
+then **re-verified independently here** rather than taken on report — Theorem A
+and Theorem C for 2, the AM–GM strengthening and its tightness for 59, and the
+equality families that overturned the README's claim about conjecture 2.
+
+That last one is the argument for the whole arrangement: **the agent found a
+mistake in this file that the main thread had made and re-stated three times.**
 
 ## Attribution of every bound in the toolkit
 

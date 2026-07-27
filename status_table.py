@@ -87,6 +87,12 @@ ENTRIES = {
             lambda g: nx.diameter(g) <= 3),
     "100": (True, W.conj_100, "alpha >= 16 -- out of reach of any corpus here",
             lambda g: W.indep_number(g) >= 16),
+    "2":   (True, W.conj_2, "triangle-free, or average degree <= 3: "
+            "Ls >= deg(u)+deg(v)-2 on an edge, plus Cauchy-Schwarz",
+            lambda g: sum(nx.triangles(g).values()) == 0
+            or 2 * g.number_of_edges() / g.number_of_nodes() <= 3),
+    "59":  (False, W.conj_59, "reduced to 2f >= b + res by AM-GM, which is "
+            "verified everywhere but not proved", None),
     "19":  (False, W.conj_19, "reduced to alpha + alpha(G-I) >= avg_ecc + max l, "
             "which is verified but not proved", None),
 }
@@ -131,8 +137,7 @@ def main(nmax=7):
               "believing it")
 
     print("\nnot in this table, and why")
-    print("   2, 40, 59, 133   settled in range only by witnesses, no regime "
-          "is proved")
+    print("   40, 133   settled in range only by witnesses, no regime is proved")
     print("   146, 198, 200, 291   resolved by other people; see "
           "wowii_status.py")
     print("   194, 198a, 217   open, no proved regime; see wowii_ham.py")

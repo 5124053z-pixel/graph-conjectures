@@ -1,0 +1,36 @@
+status over the 12112 connected graphs on 2..8
+
+    conj  applicable   holds  in the regime  residual   status of the regime
+      19       12112    True          12112         0   UNPROVED ingredient
+      61       12112    True          10845      1267   UNPROVED ingredient
+      65       12112    True          12112         0   proved
+     100       10627    True              0     10627   proved
+     141       12112    True          12112         0   proved
+     142       12112    True          11803       309   proved
+     144       12112    True          11803       309   proved
+     145       10860    True          10712       148   proved
+     160       12112    True          12063        49   proved
+     314          81    True             81         0   proved
+     316          37    True             37         0   proved
+     322          51    True             51         0   proved
+
+what the proved regime is, per conjecture
+      19  [all graphs, NOT PROVED]  reduced to alpha + alpha(G-I) >= avg_ecc + max l, which is verified but not proved
+      61  [a regime, NOT PROVED]  diam <= 3, or 3 | diam, or residue < alpha (the last two lean on the UNPROVED f >= alpha + floor(diam/3))
+      65  [all graphs]  distMin takes only 0 and 1, so the rhs never exceeds 2
+     100  [a regime]  alpha >= 16 -- out of reach of any corpus here
+     141  [all graphs]  neighbourhood star below girth 6, locally tree-like ball above; the split is forced
+     142  [a regime]  girth <= 3: diam >= 1 + ecc(B), so tree >= diam+1 >= 2 + ecc(B)
+     144  [a regime]  girth <= 3: diam >= 1 + ecc(Centers), so tree >= diam+1 >= 2 + ecc(Centers)
+     145  [a regime]  lMin(Gc) >= 2, or lMin = 1 with ecc(B) <= 2
+     160  [a regime]  G has a C4: the rhs is max l(v) <= Delta <= Ls. C4-free with one vertex attaining both maxima: rhs = deg(v)
+     314  [all graphs]  every step is an induced P5 off the private total-neighbours; the last branch names the Wagner graph
+     316  [all graphs]  a counting argument caps the core at 3 and forces it complete
+     322  [all graphs]  the hypothesis says exactly that G is complete multipartite, and those are all WTD
+
+any conjecture failing on an applicable graph: False
+
+not in this table, and why
+   2, 40, 59, 133   settled in range only by witnesses, no regime is proved
+   146, 198, 200, 291   resolved by other people; see wowii_status.py
+   194, 198a, 217   open, no proved regime; see wowii_ham.py

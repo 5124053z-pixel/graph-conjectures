@@ -535,7 +535,12 @@ def family_search(num, k, sizes, iters=3000, seed=0, verbose=False):
 # refuse every move that destroys it, which is what happens below.
 # ---------------------------------------------------------------------------
 
-def free_search(num, g0, iters=2000, seed=0, verbose=False):
+def free_search(num, g0, iters=2000, seed=0, verbose=False, constraint=None):
+    """`constraint` is an extra predicate every visited graph must satisfy.
+    It exists because the 198a search otherwise collapses onto one structure:
+    a clique with two pendants at one vertex, which has defect 1 at every
+    order, has diameter 2, and is provably the best diameter-2 can do. Setting
+    `constraint=lambda g: nx.diameter(g) >= 3` asks the other question."""
     rng = random.Random(seed)
     defect = DEFECTS[num]
     g = g0.copy()
@@ -550,7 +555,7 @@ def free_search(num, g0, iters=2000, seed=0, verbose=False):
         had = g.has_edge(u, w)
         g.remove_edge(u, w) if had else g.add_edge(u, w)
         new = None
-        if nx.is_connected(g):
+        if nx.is_connected(g) and (constraint is None or constraint(g)):
             new = defect(g)
         if new is not None and (new <= cur
                                 or rng.random() < math.exp((cur - new) / temp)):
@@ -688,5 +693,207 @@ def seeds(n):
             and not has_ham_path(v)}
 
 
+# ---------------------------------------------------------------------------
+# what the hypotheses actually say
+# ---------------------------------------------------------------------------
+
+def residue_of_sequence(seq):
+    seq = sorted(seq, reverse=True)
+    while seq and seq[0] > 0:
+        d = seq[0]
+        seq = seq[1:]
+        if d > len(seq):
+            return None
+        for i in range(d):
+            seq[i] -= 1
+        seq.sort(reverse=True)
+    return len(seq)
+
+
+def _graphical(seq):
+    s = sorted(seq, reverse=True)
+    if sum(s) % 2:
+        return False
+    n = len(s)
+    return all(sum(s[:k]) <= k * (k - 1) + sum(min(d, k) for d in s[k:])
+               for k in range(1, n + 1))
+
+
+def residue2_orders(delta=6, nmax=24):
+    """Orders n admitting a graphical degree sequence with max degree <= delta
+    and residue exactly 2. Residue is a function of the degree sequence alone,
+    so this is an exhaustive statement about graphs, obtained without looking
+    at a single graph."""
+    out = []
+    for n in range(2, nmax + 1):
+        for seq in itertools.combinations_with_replacement(range(1, delta + 1), n):
+            if sum(seq) % 2 == 0 and _graphical(seq) \
+                    and residue_of_sequence(list(seq)) == 2:
+                out.append(n)
+                break
+    return out
+
+
+def characterise():
+    """The structure each hypothesis forces. These are the useful output of a
+    failed hunt: they say where a counterexample would have to live."""
+    print("=" * 74)
+    print("WHAT THE THREE HYPOTHESES FORCE")
+    print("=" * 74)
+
+    print("""
+217.  Ls(G) <= 4*[residue(G) == 2] + 2 is two disjoint statements.
+
+      residue != 2.  The hypothesis is Ls(G) <= 2. Every spanning tree has at
+      least two leaves, so every spanning tree is a path and G has a
+      Hamiltonian path. This half of 217 is a theorem, not a conjecture.
+
+      residue == 2.  The hypothesis is Ls(G) <= 6. Now
+          gamma_c(G) <= n - Delta(G)          (Sampathkumar-Walikar 1979)
+      and Ls = n - gamma_c, so Ls(G) >= Delta(G) and the hypothesis forces
+      Delta(G) <= 6. Residue depends only on the degree sequence, so ask: for
+      which n is there a graphical sequence with max degree <= 6 and residue 2?
+      The answer is a finite set.""")
+    for d in (3, 4, 5, 6):
+        o = residue2_orders(delta=d, nmax=20)
+        print(f"          Delta <= {d}:  n in {o[0]}..{o[-1]}")
+    print("""
+      So Ls(G) <= 6 and residue(G) == 2 are simultaneously satisfiable only for
+      n <= 14, and CONJECTURE 217 IS TRUE FOR EVERY GRAPH ON 15 OR MORE
+      VERTICES. It is a finite problem, and n = 9 is settled exhaustively
+      below. What is left of 217 is 10 <= n <= 14.
+""")
+
+    print("""198a.  b(G) <= 2 + ecc_avg(G) forces b(G) to be within 2 of the
+      diameter, because a shortest path between two vertices at distance d is
+      induced and bipartite, so b(G) >= d + 1, while ecc_avg <= d. Hence
+
+          d + 1 <= b(G) <= 2 + ecc_avg(G) <= d + 2.
+
+      DIAMETER 2 IS IMPOSSIBLE FOR A COUNTEREXAMPLE, and the argument is short:
+        - b(G) >= alpha(G) + 1 (a maximum independent set plus any one further
+          vertex induces a star forest), so a counterexample has alpha >= 3,
+          since alpha <= 2 with G connected gives kappa >= alpha - 1 and a
+          Hamiltonian path by Chvatal-Erdos. Hence b >= 4.
+        - diam 2 gives every eccentricity <= 2, so the hypothesis forces
+          n*(b-2) <= sum ecc <= 2n, i.e. b <= 4. So b = 4 and sum ecc = 2n
+          exactly: NO vertex has eccentricity 1, i.e. no dominating vertex.
+        - alpha = 3 and no Hamiltonian path force kappa <= 1 (Chvatal-Erdos
+          again), so G has a cut vertex v. In a graph of diameter 2 every
+          vertex in one component of G - v is at distance 2 from every vertex
+          in another, and every such path runs through v, so v is adjacent to
+          everything. That is a dominating vertex. Contradiction.
+
+      A counterexample therefore needs diameter >= 3, hence b >= 4 and
+      ecc_avg >= b - 2 >= diam - 1: almost every vertex must have eccentricity
+      within 1 of the diameter. That is what the search below cannot arrange.
+""")
+
+    print("""194.  alpha(G) <= 1 + l_avg(G). Since l(v) <= alpha(G) for every v,
+      the hypothesis says nearly every vertex sees a near-maximum independent
+      set inside its own neighbourhood. For G bipartite with parts A, B,
+      |A| = a <= b = |B|, the invariants collapse: l(v) = deg(v), and
+      alpha = n - mu by Koenig, so the defect
+
+          n*(alpha - 1) - sum_v l(v)  =  n*(n - mu - 1) - 2m
+                                      >= a*(s - 2) + s*(s - 1),   s = b - a,
+
+      which is at least 2 whenever s >= 2 -- and s >= 2 is exactly the case
+      where a bipartite graph has no Hamiltonian path for the trivial reason.
+      Equality needs G = K_{a,a+2}. That is why the minimum defect over all
+      non-Hamiltonian graphs is 2 at every order tested, and why K_{a,a+2}
+      keeps attaining it.
+""")
+
+
+def report(nmax=15, quick=False):
+    """How hard the hunt looked, and how close it got."""
+    lo, hi = 9, (11 if quick else nmax)
+    iters = 400 if quick else 1200
+    print("=" * 74)
+    print("THE HUNT: minimum defect reached, 9..%d vertices" % hi)
+    print("=" * 74)
+    print("""
+The defect is the hypothesis violated, cleared of its denominator:
+
+    194   n*alpha - n - sum_v l(v)
+    198a  n*b - 2n - sum_v ecc(v)
+    217   Ls - 4*[residue == 2] - 2
+
+each <= 0 exactly on an applicable graph. A counterexample is a connected
+graph with defect <= 0 and no Hamiltonian path.
+""")
+    print(f"   {'n':>3} {'conj':>6} {'family':>8} {'free':>8}   best structure")
+    for n in range(lo, hi + 1):
+        sd = seeds(n)
+        for num in (194, "198a", 217):
+            fam = min(family_search(num, k, [1] * (n - k),
+                                    iters=iters, seed=n * 31 + k)[0]
+                      for k in range(1, (n - 2) // 2 + 1))
+            best, tag = 10 ** 9, None
+            for name, g0 in sd.items():
+                d, _ = free_search(num, g0, iters=iters, seed=n)
+                if d < best:
+                    best, tag = d, name
+            flag = "  *** COUNTEREXAMPLE ***" if min(fam, best) <= 0 else ""
+            print(f"   {n:>3} {str(num):>6} {fam:>8} {best:>8}   {tag}{flag}",
+                  flush=True)
+
+
+def verify(g, num):
+    """Independent verification of a claimed counterexample: the hypothesis by
+    its own definition, and the absence of a Hamiltonian path twice over --
+    by the Held-Karp decision and by exhibiting a longest path."""
+    n = g.number_of_nodes()
+    print(f"   n = {n}, m = {g.number_of_edges()}, connected "
+          f"{nx.is_connected(g)}")
+    print(f"   graph6 {nx.to_graph6_bytes(g, header=False).strip().decode()}")
+    if num == 194:
+        print(f"   alpha = {alpha(g)},  1 + l_avg = {1 + avg_l(g):.4f}")
+    elif num == "198a":
+        print(f"   b = {largest_induced_bipartite(g)},  "
+              f"2 + ecc_avg = {2 + avg_ecc(g):.4f}")
+    else:
+        print(f"   Ls = {max_leaves(g)},  residue = {residue(g)},  "
+              f"cap = {4 * (1 if residue(g) == 2 else 0) + 2}")
+    print(f"   hypothesis holds: {HYPS[num](g)}")
+    p = longest_path(g)
+    ok = all(g.has_edge(p[i], p[i + 1]) for i in range(len(p) - 1))
+    print(f"   Held-Karp says Hamiltonian path: {has_ham_path(g)}")
+    print(f"   longest path has {len(p)} of {n} vertices, genuine path: {ok}")
+    print(f"   longest path: {p}")
+    return HYPS[num](g) and not has_ham_path(g)
+
+
+def main():
+    print("WOWII 194, 198a, 217 -- counterexample hunt above the exhaustive "
+          "range\n")
+    print("validating the bitmask invariants against wowii.py")
+    assert validate(), "the fast invariants disagree with wowii.py"
+
+    print("\nthe control: Prajapati's 11-vertex counterexample to conjecture "
+          "200\nsatisfies none of these three hypotheses, and not narrowly")
+    g = nx.from_graph6_bytes(b"J??FFBRq}N_")
+    print(f"   194   alpha {alpha(g)} vs 1 + l_avg {1 + avg_l(g):.3f}"
+          f"   defect {defect_194(g)}")
+    print(f"   198a  b {largest_induced_bipartite(g)} vs 2 + ecc_avg "
+          f"{2 + avg_ecc(g):.3f}   defect {defect_198a(g)}")
+    print(f"   217   Ls {max_leaves(g)} vs cap "
+          f"{4 * (1 if residue(g) == 2 else 0) + 2}   defect {defect_217(g)}")
+    print("   so it is no help as a seed, and the hunt starts from scratch")
+
+    print()
+    characterise()
+    print()
+    report(quick=True)
+
+    print("\n" + "=" * 74)
+    print("VERDICT: no counterexample. This is a null result, and a null "
+          "result\nis not a proof -- conjecture 200 survived a stronger null "
+          "result than\nthis one. The positive content is in characterise(): "
+          "217 is true for\nall n >= 15 and only 10 <= n <= 14 remains, and "
+          "198a has no\ncounterexample of diameter <= 2.")
+
+
 if __name__ == "__main__":
-    validate()
+    main()
