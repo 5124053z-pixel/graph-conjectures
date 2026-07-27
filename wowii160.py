@@ -60,6 +60,29 @@ deg(w) = l(w) + T(w) exactly when l(u) > l(w). So the open case is precisely
 "the most locally independent vertex is not the most triangle-heavy one", and
 closing it needs a spanning tree that harvests leaves from both neighbourhoods
 at once.
+
+**A natural strengthening, and why it fails.** Over all 276 C4-free graphs on at
+most 8 vertices, and over Petersen, Heawood, C_9, P_12, balanced trees, stars,
+friendship graphs and 26 random C4-free graphs on 9..13 vertices,
+
+    max_v l(v) + max_w T(w)  <=  Delta + 1
+
+holds without exception -- and it would finish the case, since Ls >= Delta + 1
+whenever no single vertex attains both maxima. **It is false.** Take a vertex u
+of degree 5 with an independent neighbourhood, a vertex w of degree 5 carrying
+two disjoint triangles, and one edge joining the two neighbourhoods:
+
+    0-1, 0-2, 0-3, 0-4, 0-5,  6-1, 6-7, 6-8, 6-9, 6-10,  7-8, 9-10
+
+is C4-free on 11 vertices with Delta = 5, max l = l(0) = 5 and max T = T(6) = 2,
+so the left side is 7 against Delta + 1 = 6. Conjecture 160 survives it anyway,
+with Ls = 8 >= 7.
+
+The moral is the one this project keeps relearning: the strengthening was
+supported by every graph in the exhaustive range and by a dozen named families,
+and it took ten minutes of *constructing* rather than sampling to break it. A
+hill-climbing hunt for a counterexample to conjecture 160 itself, restricted to
+C4-free graphs on 9..13 vertices, reaches equality but finds nothing.
 """
 from __future__ import annotations
 

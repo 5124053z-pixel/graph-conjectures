@@ -1,0 +1,23 @@
+CLAIM A  C4-free  =>  max l + max T <= Delta + 1
+CLAIM B  C4-free, no vertex attains both maxima  =>  Ls >= Delta + 1
+
+exhaustive, 276 C4-free graphs on 2..8:
+   A fails 0
+   B fails 0
+
+   graph               maxl  maxT  Delta   Ls     A  both     B
+   Petersen               3     0      3    6  True  True  True
+   Heawood                3     0      3    8  True  True  True
+   C_9                    2     0      2    2  True  True  True
+   P_12                   2     0      2    2  True  True  True
+   balanced tree 2,3      3     0      3    8  True  True  True
+   star K1,8              8     0      8    8  True  True  True
+   friendship F3          3     3      6    6  True  True  True
+   triangle chain         2     2      4    5  True  True  True
+
+random C4-free graphs, 9..13 vertices:
+   through n=9: 7 tested, A fails 0, B fails 0
+   through n=10: 11 tested, A fails 0, B fails 0
+   through n=11: 16 tested, A fails 0, B fails 0
+   through n=12: 23 tested, A fails 0, B fails 0
+   through n=13: 26 tested, A fails 0, B fails 0
