@@ -484,7 +484,8 @@ is left with over the 995 connected graphs on `≤ 7` vertices.
 | **65** | `distMin` only takes `0` and `1` in a connected graph, so the RHS never exceeds 2 |
 | **141** | neighbourhood star for `girth ≤ 5`, locally-tree-like ball for `girth ≥ 6` |
 | **316** | the hypothesis admits only complete graphs and `K₁,K₂,K₃` with pendants |
-| **322** | the hypothesis forces `G = K_n` |
+| **160** | `G` has a `C₄`, or is `C₄`-free with one vertex attaining both maxima, or Theorem A applies — residual 11 |
+| **322** | the hypothesis says exactly that `G` is complete multipartite, and those are all well totally dominated |
 
 **Settled over every connected graph on `≤ 7` vertices by proved lower bounds:**
 
@@ -1023,29 +1024,21 @@ The bottom three themes are where nothing has been resolved, so that is where to
 look. This is target selection done before writing code rather than after — the
 step whose absence cost the whole Laplacian result.
 
-## Result: conjecture 322 is true, and its hypothesis is nearly vacuous
+## Retracted: the old reading of conjecture 322
 
-> **WOWII 322.** *Let `G` be connected on `n ≥ 5` vertices. If `max_v l(v) ≤ 1`,
-> where `l(v) = α(G[N(v)])`, then `G` is well totally dominated.*
-
-**Theorem.** True, and `n ≥ 5` is unnecessary — it holds for every connected
-graph on at least two vertices.
-
-*Step 1: the hypothesis forces `G` to be complete.* `l(v) ≤ 1` says `N(v)` is a
-clique. If `u ~ v ~ w` with `u ≠ w`, then `u, w ∈ N(v)`, so `u ~ w`. Adjacency is
-transitive, every component is a clique, and connectedness gives `G = K_n`.
-
-*Step 2: `K_n` is well totally dominated.* Every pair `{u,v}` totally dominates;
-a singleton does not, since `u` has no neighbour in `{u}`; and any set of size
-`≥ 3` properly contains a dominating pair, so is not minimal. All minimal total
-dominating sets have size exactly 2. ∎
-
-Worth almost nothing as mathematics — two lines, unwritten presumably because
-nobody looked. What it illustrates is a property of machine-generated
-conjectures: `max_v l(v) ≤ 1` *reads* as a mild local condition and is in fact
-the strongest possible one, collapsing the statement to a single family. Of the
-995 connected graphs on ≤ 7 vertices, exactly **6** satisfy it: `K₂` through
-`K₇`.
+> ### ⚠ Superseded — see *Result: conjecture 322 is true, and the earlier proof
+> was of the wrong statement*, below.
+>
+> This section used to prove that `max_v l(v) ≤ 1` forces `G = K_n`, and called
+> the conjecture "worth almost nothing as mathematics". **The hypothesis is
+> `λmax(Ḡ) ≤ 1` — the local independence of the COMPLEMENT.** The complement is
+> an overline in the source HTML and was lost when the page was read as text.
+>
+> The argument that was here is correct about `λmax(G) ≤ 1`, which admits 4 of
+> the 12,112 connected graphs on at most 8 vertices, all complete. The real
+> hypothesis admits 51, most of them not complete, and says exactly that `G` is
+> **complete multipartite**. The conjecture has content and the proof is given
+> below.
 
 Checking what a hypothesis actually admits, before spending a search budget on
 it, is cheap.
@@ -1435,6 +1428,16 @@ below.
 
 ### Conjecture 160, as formalised, is false — with a five-vertex counterexample
 
+> ### ⚠ Partly superseded — see *Result: conjecture 160 is not refuted*, below.
+>
+> The counterexample here is real and refutes `GraphConjecture160.lean`. What
+> follows it once said "no reading of `c_C4` rescues it", and that was wrong: it
+> came from a line **labelled** as conjecture 133's convention while computing
+> something else (failure 19). DeLaViña's definition 73 makes `c_C4` the
+> indicator of being `C₄`-free, **not necessarily induced**, and under that
+> reading the statement has no violation anywhere it has been checked.
+> **Conjecture 160 is open, and most of it is now proved.**
+
 The small-witness guard from failure 12 fired on `#160`: 489 violations, the
 smallest on 5 vertices. It is not a bug this time.
 
@@ -1561,12 +1564,15 @@ granularity gets finer as `n` grows. That makes a targeted search worthwhile —
 over graphs constructed to have no Hamiltonian path, maximising the hypothesis
 slack — rather than over graphs in general.
 
-### Applying the 322 lesson to the other conditionals
+### Applying the hypothesis-measuring lesson to the other conditionals
 
 Measuring what each hypothesis admits among the 995 connected graphs on ≤ 7
-vertices: `#322` admits 6 (and they are `K₂`–`K₇`, which is the whole content of
-that conjecture), `#316` admits 27, `#314` admits 40. Neither of the latter two
-collapses — they are narrow but genuinely varied, mostly bipartite for `#314`.
+vertices: `#316` admits 27 and `#314` admits 40. Neither collapses — they are
+narrow but genuinely varied, mostly bipartite for `#314`.
+
+*(This paragraph used to report `#322` as admitting 6 graphs, `K₂`–`K₇`. That
+was the mis-read hypothesis without the complement; the real one admits 30 in
+this range and 51 on at most 8 vertices. See the retraction above.)*
 
 `#314` almost lands inside a known theorem. Bahadır, Ekim and Gözüpek
 (*Well-Totally-Dominated Graphs*, [arXiv:2010.02341](https://arxiv.org/abs/2010.02341))
@@ -1610,7 +1616,7 @@ Worth tabulating, because it is not where the effort went.
 | result | how it was found |
 |---|---|
 | `γ_t(G □ K₂) = γ(G × K₂)` | reading the **equality cases** of a scan |
-| conjecture 322 resolved | measuring what the **hypothesis admits** |
+| conjecture 322 resolved | measuring what the **hypothesis admits** — and later, reading the **markup** rather than the rendered page |
 | conjecture 100's prose/statement mismatch | **reading the definitions** |
 | bounds 44 and 46 asymptotic families | reading **what the search converged to** |
 | conjecture 160 false as formalised | exhaustive search — and it found a *transcription bug*, not mathematics |
@@ -2608,8 +2614,9 @@ not enumeration.
 
 So the realistic breakdown of the 22:
 
-* **6 moved here** — 65, 141, 314, 316, 322 proved; 160 refuted as formalised.
-  Of these, 65 and 322 are trivial once read, 316 is a short counting argument,
+* **5 proved here** — 65, 141, 314, 316, 322. (160 is **not** refuted; only its
+  Lean transcription is — see the retraction above.)
+  Of these, 65 is trivial once read, 316 is a short counting argument,
   141 is real but its ingredients are textbook, and 314's `γ_t = 2` half turns
   out to be published. **The genuinely new mathematics is Part 1 of 314** — the
   cap `|S| ≤ 3` — and the `α ≥ 16` reduction of 100.
@@ -2945,7 +2952,8 @@ scan_cubic.py         the conjecture over every connected cubic graph
 allgraphs.py          exhaustive generation of all connected graphs, count-checked
                        against OEIS A000088 and A001349; lifts the 7-vertex cap
 wowii.py              the untouched Graffiti.pc conjectures, from the Lean list
-wowii322.py           conjecture 322 resolved, and why its hypothesis is vacuous
+wowii322.py           conjecture 322 resolved: the hypothesis is exactly
+                      "complete multipartite"
 wowii_toolkit.py      every free bound, with its one-line reason, and the
                        residual each conjecture is left with
 wowii141.py           conjecture 141 proved: neighbourhood star for girth <= 5,
