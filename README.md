@@ -2043,6 +2043,48 @@ within one step by rerunning the real toolkit, whose bound list only ever
 contains validated entries — which is an argument for the toolkit being the only
 path to a coverage number.
 
+## Two live discrepancies in the Lean formalisations
+
+Checked against the current `google-deepmind/formal-conjectures` on 27 July 2026.
+These are verifiable by reading two documents side by side — no mathematics
+required, which makes them the cheapest real contribution available here.
+
+**Conjecture 141.** `GraphConjecture141.lean` states
+
+```lean
+(G.girth / 2 : ℤ) - 1 + (Finset.univ.sup (indepNeighborsCard G) : ℤ) ≤ largestInducedTreeSize G
+```
+
+with integer division, and its docstring says `⌊girth(G)/2⌋`. **DeLaViña's page
+has `(1/2)*girth`**, which at odd girth is larger by a half and so, after
+rounding, stronger by one. On `C₇` the Lean version asks for 4 and the original
+for 5.
+
+**Conjecture 322.** `GraphConjecture322.lean` states
+
+```lean
+(h : ∀ v : α, indepNeighborsCard G v ≤ 1) : IsWellTotallyDominated G
+```
+
+— the hypothesis is about `G`. **The source has `λmax(Ḡ)`**, the complement,
+written as `<span style="text-decoration: overline">G</span>` in the page HTML.
+The difference is not cosmetic: the Lean hypothesis admits 4 of the 12,112
+connected graphs on at most 8 vertices, all complete, while the real one admits
+51 and says exactly that `G` is complete multipartite.
+
+**Conjecture 160 was a third, and is already fixed** — see the retraction below.
+Its Lean file used a *count* of induced 4-cycles where the source has an
+indicator; PR 4443 corrected it on 26 July 2026, a day before this check, and
+the file is now `160.lean`. The same bug was found independently by someone else
+within a day of it being found here.
+
+**Why this is the right first contribution.** It needs no specialist to
+validate. Anyone can open the Lean file and the page and compare. And for 322
+there is a bonus: the Lean statement *as written* is a genuine, if weak,
+theorem — the hypothesis forces `G = K_n`, and `K_n` is well totally dominated
+in two lines — so the file can be given a real proof at the same time as the
+discrepancy is reported.
+
 ## The statement audit, and what it changed
 
 After the 160 mislabelling, every one of the eighteen open conjectures was
