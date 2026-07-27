@@ -408,8 +408,11 @@ def validate(nmax=7, verbose=True):
     Not optional. `largest_induced_bipartite` here is a different algorithm
     from the one in wowii.py, not an optimisation of it, and a max-leaves
     routine with an off-by-one in the `cap` short-circuit would silently make
-    conjecture 217's hypothesis look unsatisfiable -- which is precisely the
-    conclusion this file reaches, so the routine has to be beyond doubt."""
+    conjecture 217's hypothesis look unsatisfiable, so the routine has to be
+    beyond doubt. It is worth noting that an earlier version of this file did
+    conclude the hypothesis was unsatisfiable for large n, and that conclusion
+    was wrong for a different reason -- it overlooked the branch where the
+    residue is not 2, which paths and cycles satisfy at every order."""
     import wowii as W
     graphs = [g for g in nx.graph_atlas_g()
               if 2 <= g.number_of_nodes() <= nmax and nx.is_connected(g)]
@@ -1031,11 +1034,25 @@ fully covered by five classical certificates -- and is false at 11.
 
 What is not weak:
 
-  * 217 is TRUE for every graph on 15 or more vertices, because its
-    hypothesis is unsatisfiable there. See characterise(). Only 10 <= n <= 14
-    is open, and over every one of the degree sequences that range permits
-    (%s in total) a degree-preserving search never got Ls below 6 for
-    n >= 11 at all.
+  * 217's hypothesis splits into two branches and only one has content.
+    CORRECTION to an earlier version of this file, which claimed the
+    hypothesis is unsatisfiable for n >= 15: it is NOT. P_15 and C_20 both
+    satisfy it, with residue != 2 and Ls = 2. What is true is that they
+    satisfy the TRIVIAL branch:
+
+        residue != 2  ->  Ls <= 2  ->  every spanning tree is a path, so G
+                          is a path or a cycle and has a Hamiltonian path;
+        residue == 2  ->  Ls <= 6, which is the whole content.
+
+    And residue = 2 keeps gamma_c bounded as n grows: over 851 random
+    connected graphs with residue = 2 and Ls >= 3 on 9..24 vertices the
+    largest gamma_c seen was 3, and over all 12,112 graphs on at most 8 the
+    largest is 4. With gamma_c <= 4 we get Ls = n - gamma_c >= n - 4, so
+    Ls <= 6 forces n <= 10 and the content of 217 is confined to a finite
+    range. That bound on gamma_c is VERIFIED, NOT PROVED, so 217 is not
+    resolved -- but its open part is small and explicitly located.
+    (A degree-preserving search over the %s degree sequences the range
+    permits never got Ls below 6 for n >= 11.)
 
   * 198a has no counterexample of diameter <= 2, proved in characterise().
     Forcing diameter >= 3 makes the search WORSE as n grows -- defect

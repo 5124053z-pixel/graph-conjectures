@@ -2717,6 +2717,62 @@ equality families that overturned the README's claim about conjecture 2.
 That last one is the argument for the whole arrangement: **the agent found a
 mistake in this file that the main thread had made and re-stated three times.**
 
+## Conjecture 217's content is confined to a finite range
+
+> **WOWII 217.** *`Ls(G) ≤ 4·[residue(G) = 2] + 2` ⟹ `G` has a Hamiltonian
+> path.*
+
+The hypothesis is two branches and only one of them says anything.
+
+* **`residue ≠ 2`** gives `Ls ≤ 2`. Every spanning tree has at least two leaves,
+  so every spanning tree is a **path** — `G` is a path or a cycle, and has a
+  Hamiltonian path. **Trivial, at every order.**
+* **`residue = 2`** gives `Ls ≤ 6`. All the content is here.
+
+And the second branch cannot survive large `n`. **`residue = 2` keeps `γ_c`
+bounded**: over 851 random connected graphs with `residue = 2` and `Ls ≥ 3` on
+9–24 vertices the largest `γ_c` seen was **3**, and over all 12,112 graphs on at
+most 8 the largest is **4**. Since `Ls = n − γ_c`, a bound `γ_c ≤ 4` gives
+`Ls ≥ n − 4`, and `Ls ≤ 6` then forces
+
+    n ≤ 10.
+
+So the whole content of conjecture 217 lives below 11 vertices. **The bound on
+`γ_c` is verified, not proved**, so this does not resolve it — but it locates
+the open part exactly, and it is a finite target rather than an infinite one.
+
+Alongside: **198a has no counterexample of diameter ≤ 2** (proved), and forcing
+diameter ≥ 3 makes the search *worse* as `n` grows — the defect runs 2, 2, 6, 6,
+8, 13 at `n` = 9…14, because `b(G)` outgrows the average eccentricity once the
+graph has to branch. The three conjectures' defect floors are **2, 1, 1 and flat
+in `n`**: the same three families — `K_{a,a+2}`, a clique with two pendants at
+one vertex, a three-legged spider — attain them at every order from 4 to 16, and
+no search ever got below.
+
+## What went wrong (continued)
+
+**21. An agent's headline claim was wrong, and only independent checking caught
+it.** The Hamiltonian-path agent reported, as its strongest positive result,
+that *"217 is TRUE for every graph on 15 or more vertices, because its
+hypothesis is unsatisfiable there."*
+
+**The hypothesis is satisfiable there.** `P₁₅` and `C₂₀` both satisfy it — they
+have `residue ≠ 2` and `Ls = 2`. The agent had looked only at the `residue = 2`
+branch and generalised from it.
+
+The conclusion survives in weakened form, because the graphs it overlooked
+satisfy the *trivial* branch. But that is luck, not method: the claim as written
+was false, it was the most quotable line in the report, and it would have gone
+into the README verbatim if the habit here were to take agent output on trust.
+
+Three agents ran on this project. **Two of them produced findings that corrected
+the main thread** — conjecture 2's equality families, and the whole AM–GM
+reframing of 59. **One produced a false headline.** The rate is what one should
+expect from any collaborator, human or not, and it is the argument for the rule
+that was already in force: *every claim gets re-verified in the main thread
+before it is written down.* Running work in parallel multiplies output; it does
+not multiply reliability.
+
 ## Attribution of every bound in the toolkit
 
 Run at the same time as the status check, and it moved several entries out of
