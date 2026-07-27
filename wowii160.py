@@ -61,6 +61,29 @@ deg(w) = l(w) + T(w) exactly when l(u) > l(w). So the open case is precisely
 closing it needs a spanning tree that harvests leaves from both neighbourhoods
 at once.
 
+**The C4-free case, closed further by a lemma proved for a different
+conjecture.** Work on WOWII 2 produced
+
+    THEOREM A.  Ls(G) >= |N(u) u N(v)| - 2  for any two vertices u, v.
+
+(Master Lemma: for any acyclic subgraph F, Ls >= 2 + sum_w (deg_F(w) - 2)+;
+apply it to the union of the two stars.) In a C4-free graph two vertices share
+at most one neighbour, so |N(u) u N(w)| >= deg(u) + deg(w) - 1, and with
+l(u) = deg(u) - T(u) the target l(u) + T(w) <= |N(u) u N(w)| - 2 becomes
+
+    T(w) + |N(u) n N(w)|  <=  T(u) + deg(w) - 2.
+
+Since T(w) <= floor(deg(w)/2), that holds outright once deg(w) >= 5, and with
+disjoint neighbourhoods once deg(w) >= 4 -- which T(w) >= 2 already forces. So
+the whole *infinite tail* of the C4-free case is covered, including the family
+below that the earlier route could not reach.
+
+Over the 12,112 graphs the criterion closes **38 of the 49**, leaving **11**.
+Every one of the 11 has **T(u) = 0** -- the l-maximiser's neighbourhood is
+independent -- together with deg(w) <= 3 or intersecting neighbourhoods. Their
+profiles (max T, T(u), deg(w), |N(u) n N(w)|) are (1,0,2,0) six times,
+(1,0,3,1) twice and (2,0,4,1) three times.
+
 **A natural strengthening, and why it fails.** Over all 276 C4-free graphs on at
 most 8 vertices, and over Petersen, Heawood, C_9, P_12, balanced trees, stars,
 friendship graphs and 26 random C4-free graphs on 9..13 vertices,
@@ -83,6 +106,14 @@ supported by every graph in the exhaustive range and by a dozen named families,
 and it took ten minutes of *constructing* rather than sampling to break it. A
 hill-climbing hunt for a counterexample to conjecture 160 itself, restricted to
 C4-free graphs on 9..13 vertices, reaches equality but finds nothing.
+
+And the family built to break it turns out to sit exactly at equality. Taking a
+vertex of degree Delta with an independent neighbourhood and a vertex of degree
+4 carrying two triangles, joined through one vertex, gives Ls = max l + max T
+exactly at n = 11 and again at n = 13. Theorem A explains why: it delivers
+deg(u) + deg(w) - 2, and the two vertices lost are precisely the ends of the
+connecting path that lie in the two neighbourhoods. The conjecture is sharp on
+that family, and the criterion above meets it without slack.
 """
 from __future__ import annotations
 
