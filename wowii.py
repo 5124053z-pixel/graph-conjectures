@@ -600,9 +600,14 @@ def conj_146(g):
 
 
 def conj_160(g):
-    """max_v l(v) + maxTrianglesAtVertex(G) * countInducedC4(G) <= Ls(G)."""
+    """max_v l(v) + max_v T(v) * cC4(G) <= Ls(G), with cC4 as DeLaVina defines it.
+
+    Definition 73 of her definitions file: cC4(G) is 1 if G is C4-free -- NOT
+    necessarily induced -- and 0 otherwise. The Lean file uses a *count* of
+    induced 4-cycles, under which the statement fails on 8,985 of the 12,112
+    connected graphs on at most 8 vertices. See wowii160.py."""
     lhs = (max(local_independence(g, v) for v in g)
-           + max_triangles_at_vertex(g) * count_induced_c4(g))
+           + max_triangles_at_vertex(g) * (0 if has_c4_subgraph(g) else 1))
     return True, lhs <= max_leaves_via_cds(g)
 
 

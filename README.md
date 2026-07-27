@@ -2110,35 +2110,52 @@ radius, `⌊girth/2⌋` for `girth/2`, `c_C4` as a count — was a *transcriptio
 error somewhere upstream. This one was introduced here, by the extraction step,
 and would have been caught by a single `grep overline`.
 
-## Retraction: conjecture 160 is not refuted
+## Result: conjecture 160 is not refuted — and is now mostly proved
 
-An earlier claim here was that conjecture 160 is "false as formalised", with a
-five-vertex counterexample. **The counterexample is real and the framing was
-too generous to itself.** Testing both readings of the symbol `c_C4` over all
-12,112 connected graphs on at most 8 vertices:
+Twice retracted, and the second retraction turns it into a result.
+
+**The definition settles it.** `wowIIdefs.js`, definition 73, from DeLaViña's own
+page:
+
+> `c_C4(G)` **is 1 if `G` is C4-free (not necessarily induced) and 0 otherwise.**
+
+Testing all four candidate readings over the 12,112 connected graphs on at most
+8 vertices:
 
 | reading of `c_C4` | violations |
 |---|---|
-| **count** of induced 4-cycles — what the Lean file uses | **8,985** |
-| **indicator**, `0` if `G` has a `C₄` and `1` otherwise — what conjecture 133 uses for the same symbol | **0** |
-| indicator on *induced* `C₄` | 1,969 |
+| count of induced 4-cycles — **what the Lean file uses** | **8,985** |
+| indicator, `0` if induced `C₄` | 1,969 |
+| indicator, `1` if induced `C₄` | 7,675 |
+| **`1` if `C₄`-free, definition 73** | **0** |
 
-A statement failing on three quarters of all small graphs is not something
-Graffiti would emit and nobody would list as open for twenty years. The same
-symbol is an indicator ten conjectures earlier on the same list. **So the count
-reading is a transcription error, and under the correct reading conjecture 160
-holds everywhere it has been checked and is still open.**
+So the earlier claim that conjecture 160 is "false as formalised" was right about
+the Lean file and wrong about everything else; and the follow-on claim that "no
+reading rescues it" was an artefact of the mislabelled line in failure 19.
 
-Nothing here refutes conjecture 160. What it refutes is
-`GraphConjecture160.lean`, which is worth reporting upstream — and the evidence
-is now a ratio of 8,985 to 0 rather than one small graph.
+### The theorem
 
-The general lesson is the one from failure 11 and failure 17, arriving a third
-time: **formalisation fixes ambiguity, not fidelity.** Three separate
-definitional problems have now surfaced in this directory — `ecc` read as a
-radius, `⌊girth/2⌋` where the original has `girth/2`, and `c_C4` as a count
-where the list means an indicator — and each was invisible until something
-outside the formalisation was consulted.
+**Case 1 — `G` contains a 4-cycle.** Then `c_C4 = 0` and the statement reduces
+to `Ls(G) ≥ max_v l(v)`. Since `l(v) = α(G[N(v)]) ≤ deg(v) ≤ Δ` and `Ls ≥ Δ`,
+this is immediate. **11,836 of the 12,112 graphs in range.**
+
+**Case 2 — `G` is `C₄`-free.** Then `G[N(v)]` is a **matching** for every `v`:
+if `x, y, z ∈ N(v)` with `x~y~z`, then `x—v—z—y—x` is a 4-cycle. Hence
+
+    T(v) = |E(G[N(v)])|,   l(v) = deg(v) − T(v),   so   l(v) + T(v) = deg(v).
+
+If one vertex attains **both** maxima, the right-hand side is exactly `deg(v) ≤
+Δ ≤ Ls`. **227 of the 276 `C₄`-free graphs in range.**
+
+**Residual: 49 graphs** — `C₄`-free, with the two maxima only at different
+vertices. All hold, 43 of them with equality.
+
+**The gap has a clean description.** With `u` maximising `l` and `w` maximising
+`T`, the target `l(u) + T(w)` exceeds `deg(u)` exactly when `T(w) > T(u)`, and
+exceeds `deg(w)` exactly when `l(u) > l(w)`. So the open case is precisely *the
+most locally independent vertex is not the most triangle-heavy one*, and closing
+it means building a spanning tree that harvests leaves from both neighbourhoods
+at once.
 
 ## The literature check, done properly — and what it found
 
