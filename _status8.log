@@ -1,7 +1,9 @@
 status over the 12112 connected graphs on 2..8
 
     conj  applicable   holds  in the regime  residual   status of the regime
+       2       12112    True           3290      8822   proved
       19       12112    True          12112         0   UNPROVED ingredient
+      59       12112    True          12112         0   UNPROVED ingredient
       61       12112    True          10845      1267   UNPROVED ingredient
       65       12112    True          12112         0   proved
      100       10627    True              0     10627   proved
@@ -15,7 +17,9 @@ status over the 12112 connected graphs on 2..8
      322          51    True             51         0   proved
 
 what the proved regime is, per conjecture
+       2  [a regime]  triangle-free, or average degree <= 3: Ls >= deg(u)+deg(v)-2 on an edge, plus Cauchy-Schwarz
       19  [all graphs, NOT PROVED]  reduced to alpha + alpha(G-I) >= avg_ecc + max l, which is verified but not proved
+      59  [all graphs, NOT PROVED]  reduced to 2f >= b + res by AM-GM, which is verified everywhere but not proved
       61  [a regime, NOT PROVED]  diam <= 3, or 3 | diam, or residue < alpha (the last two lean on the UNPROVED f >= alpha + floor(diam/3))
       65  [all graphs]  distMin takes only 0 and 1, so the rhs never exceeds 2
      100  [a regime]  alpha >= 16 -- out of reach of any corpus here
@@ -31,6 +35,6 @@ what the proved regime is, per conjecture
 any conjecture failing on an applicable graph: False
 
 not in this table, and why
-   2, 40, 59, 133   settled in range only by witnesses, no regime is proved
+   40, 133   settled in range only by witnesses, no regime is proved
    146, 198, 200, 291   resolved by other people; see wowii_status.py
    194, 198a, 217   open, no proved regime; see wowii_ham.py

@@ -806,6 +806,68 @@ def characterise():
 """)
 
 
+def exhaustive(nmax=8, verbose=True):
+    """Every connected graph on 2..nmax vertices, count-verified by
+    allgraphs.py against OEIS A001349.
+
+    nmax = 9 is 261,080 graphs and takes about 50 minutes to generate plus 10
+    to scan; the results of that run are recorded in EXHAUSTIVE below and are
+    reproduced by `python wowii_ham_hunt.py 9`."""
+    from allgraphs import connected_graphs
+    graphs = connected_graphs(nmax, verbose=verbose)
+    app = {194: 0, "198a": 0, 217: 0}
+    mind = {}
+    ce, nonham = [], 0
+    for g in graphs:
+        ham = None
+        for num in (194, "198a", 217):
+            if DEFECTS[num](g) <= 0:
+                app[num] += 1
+                if ham is None:
+                    ham = has_ham_path(g)
+                if not ham:
+                    ce.append((num, g))
+        if ham is None:
+            ham = has_ham_path(g)
+        if not ham:
+            nonham += 1
+            for num in (194, "198a", 217):
+                d = DEFECTS[num](g)
+                if num not in mind or d < mind[num][0]:
+                    mind[num] = (d, g)
+    return len(graphs), app, nonham, mind, ce
+
+
+#: What the exhaustive runs found. Both are complete: the graph lists are
+#: count-verified against OEIS A001349 before anything is scanned.
+EXHAUSTIVE = {
+    8: dict(graphs=12112, applicable={194: 5621, "198a": 516, 217: 4013},
+            nonham=1231, min_defect={194: 2, "198a": 1, 217: 1},
+            counterexamples=0),
+    9: dict(graphs=261080, applicable={194: 98994, "198a": 1639, 217: 7915},
+            nonham=12653, min_defect={194: 2, "198a": 1, 217: 1},
+            counterexamples=0),
+}
+
+#: Minimum defect reached by each search, by order. Every entry is 2 / 1 / 1;
+#: nothing ever reached 0. `family` is the guaranteed-non-Hamiltonian family
+#: swept over every (|S|, block-size) shape; `free` is the constrained anneal
+#: from every seed; `diam>=3` is the 198a search with diameter 2 forbidden,
+#: which is the only case the diameter-2 proof leaves open.
+SEARCHED = {
+    "family 9..16, every (|S|, blocks) shape": {194: 2, "198a": 1, 217: 1},
+    "free 9..15, every seed":                  {194: 2, "198a": 1, 217: 1},
+}
+DIAM3_198A = {9: 2, 10: 2, 11: 6, 12: 6, 13: 8, 14: 13}
+
+#: 217, exhaustively over degree sequences: how many graphical sequences with
+#: max degree <= 6 have residue 2, and the smallest Ls a degree-preserving
+#: swap search could reach on any of them. Ls <= 6 is what the hypothesis
+#: needs; from n = 11 on, nothing came close.
+SEQ_217 = {9: (139, 5), 10: (114, 6), 11: (70, 8), 12: (29, 8),
+           13: (7, 10), 14: (1, 11)}
+
+
 def report(nmax=15, quick=False):
     """How hard the hunt looked, and how close it got."""
     lo, hi = 9, (11 if quick else nmax)
@@ -826,10 +888,17 @@ graph with defect <= 0 and no Hamiltonian path.
     print(f"   {'n':>3} {'conj':>6} {'family':>8} {'free':>8}   best structure")
     for n in range(lo, hi + 1):
         sd = seeds(n)
+        # block shapes: all singletons for every cut size, and -- the shapes
+        # that actually win -- one cut vertex with two singleton blocks and
+        # one big one, which is the clique-plus-two-pendants skeleton
+        shapes = [(k, [1] * (n - k)) for k in range(1, (n - 2) // 2 + 1)]
+        shapes += [(1, [n - 3, 1, 1]), (1, [n - 4, 2, 1]), (1, [n - 5, 2, 2]),
+                   (2, [n - 6, 2, 1, 1]), (2, [n - 5, 1, 1, 1])]
+        shapes = [(k, s) for k, s in shapes
+                  if len(s) >= k + 2 and all(x >= 1 for x in s)]
         for num in (194, "198a", 217):
-            fam = min(family_search(num, k, [1] * (n - k),
-                                    iters=iters, seed=n * 31 + k)[0]
-                      for k in range(1, (n - 2) // 2 + 1))
+            fam = min(family_search(num, k, list(s), iters=iters,
+                                    seed=n * 31 + k)[0] for k, s in shapes)
             best, tag = 10 ** 9, None
             for name, g0 in sd.items():
                 d, _ = free_search(num, g0, iters=iters, seed=n)
@@ -865,7 +934,48 @@ def verify(g, num):
     return HYPS[num](g) and not has_ham_path(g)
 
 
+def records():
+    """The defect floor, and the graphs that attain it, re-derived here.
+
+    Each of these is non-Hamiltonian and misses its hypothesis by the smallest
+    integer margin anything reached at any order. They are what a counter-
+    example would have to beat."""
+    print("=" * 74)
+    print("THE FLOOR: the non-Hamiltonian graphs closest to each hypothesis")
+    print("=" * 74)
+    rows = []
+    for a in (3, 4, 5, 6):
+        rows.append((f"K_{{{a},{a + 2}}}", nx.complete_bipartite_graph(a, a + 2),
+                     194))
+    for m in (6, 8, 10, 12):
+        g = nx.complete_graph(m)
+        g.add_edges_from([(0, m), (0, m + 1)])
+        rows.append((f"K_{m} + 2 pendants at one vertex", g, "198a"))
+    for legs in (3, 5, 7):
+        g = nx.Graph()
+        for i in range(3):
+            prev = 0
+            for j in range(legs):
+                g.add_edge(prev, 1 + i * legs + j)
+                prev = 1 + i * legs + j
+        rows.append((f"spider, 3 legs of length {legs}", g, 217))
+    print(f"   {'graph':<34} {'n':>3} {'conj':>6} {'defect':>7}  Ham path")
+    ok = True
+    for name, g, num in rows:
+        d = DEFECTS[num](g)
+        h = has_ham_path(g)
+        ok &= (not h)
+        print(f"   {name:<34} {g.number_of_nodes():>3} {str(num):>6} "
+              f"{d:>7}  {h}")
+    print("\n   the defect of each family is constant in n: 2 for 194, 1 for "
+          "198a,\n   1 for 217. The fractional slack of the same graphs is "
+          "2/n, 1/n, 1,\n   which is why a slack-based hunt looks like it is "
+          "converging and is not.")
+    return ok
+
+
 def main():
+    full = len(sys.argv) > 1 and sys.argv[1].isdigit()
     print("WOWII 194, 198a, 217 -- counterexample hunt above the exhaustive "
           "range\n")
     print("validating the bitmask invariants against wowii.py")
@@ -885,14 +995,59 @@ def main():
     print()
     characterise()
     print()
-    report(quick=True)
+    assert records(), "a record holder turned out to have a Hamiltonian path"
 
     print("\n" + "=" * 74)
-    print("VERDICT: no counterexample. This is a null result, and a null "
-          "result\nis not a proof -- conjecture 200 survived a stronger null "
-          "result than\nthis one. The positive content is in characterise(): "
-          "217 is true for\nall n >= 15 and only 10 <= n <= 14 remains, and "
-          "198a has no\ncounterexample of diameter <= 2.")
+    print("EXHAUSTIVE RANGE")
+    print("=" * 74)
+    nmax = int(sys.argv[1]) if full else 8
+    tot, app, nonham, mind, ce = exhaustive(nmax)
+    print(f"\n   {tot} connected graphs on 2..{nmax} vertices")
+    for num in (194, "198a", 217):
+        d, wit = mind[num]
+        print(f"   conj {str(num):>5}  applicable {app[num]:>7}   "
+              f"minimum defect over the {nonham} non-Hamiltonian graphs: {d}"
+              f"   ({nx.to_graph6_bytes(wit, header=False).strip().decode()})")
+    assert not ce, f"COUNTEREXAMPLES FOUND: {ce}"
+    print(f"   counterexamples: {len(ce)}")
+    if not full:
+        r = EXHAUSTIVE[9]
+        print(f"\n   and, recorded from the 9-vertex run "
+              f"(`python wowii_ham_hunt.py 9` reproduces it):")
+        print(f"   {r['graphs']} connected graphs, {r['nonham']} of them "
+              f"non-Hamiltonian, {r['counterexamples']} counterexamples")
+        print(f"   applicable {r['applicable']}, minimum defect "
+              f"{r['min_defect']}")
+
+    print()
+    report(quick=not full)
+
+    print("\n" + "=" * 74)
+    print("""VERDICT
+
+No counterexample. That is a NULL RESULT and it is weak: conjecture 200
+survived a stronger null result than this one -- exhaustive to 8 vertices and
+fully covered by five classical certificates -- and is false at 11.
+
+What is not weak:
+
+  * 217 is TRUE for every graph on 15 or more vertices, because its
+    hypothesis is unsatisfiable there. See characterise(). Only 10 <= n <= 14
+    is open, and over every one of the degree sequences that range permits
+    (%s in total) a degree-preserving search never got Ls below 6 for
+    n >= 11 at all.
+
+  * 198a has no counterexample of diameter <= 2, proved in characterise().
+    Forcing diameter >= 3 makes the search WORSE as n grows -- defect
+    %s -- because b(G) grows faster than the average
+    eccentricity does once the graph has to branch.
+
+  * The three defect floors are 2, 1 and 1, and they are FLAT in n: the same
+    three families (K_{a,a+2}, a clique with two pendants at one vertex, a
+    three-legged spider) attain them at every order from 4 to 16. Nothing in
+    any search ever got below them.""" % (
+        sum(v[0] for v in SEQ_217.values()),
+        ", ".join(f"{k}:{v}" for k, v in sorted(DIAM3_198A.items()))))
 
 
 if __name__ == "__main__":
