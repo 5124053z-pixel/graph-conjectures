@@ -2037,6 +2037,79 @@ within one step by rerunning the real toolkit, whose bound list only ever
 contains validated entries — which is an argument for the toolkit being the only
 path to a coverage number.
 
+## The statement audit, and what it changed
+
+After the 160 mislabelling, every one of the eighteen open conjectures was
+compared against DeLaViña's own page, statement by statement. Two things had to
+be fetched to do it properly: `wowIIdefs.js`, which carries the definitions, and
+the **raw HTML**, because the complement is written as an *overline* and reading
+the page as text silently drops it.
+
+`length(G)`, from the definitions file, is "the square root of the sum of the
+squares of degrees". The audit result:
+
+| conjecture | complement in the source? | implementation was |
+|---|---|---|
+| 100 (`length(Ḡ)`) | **yes** | correct |
+| 145 (`λmin(Ḡ)`) | **yes** | correct |
+| 316 (`deg_avg(Ḡ)`) | **yes** | correct |
+| **322** (`λmax(Ḡ)`) | **yes** | **wrong — read as `λmax(G)`** |
+| 19, 133, 141, 160 | no | correct |
+
+## Result: conjecture 322 is true, and the earlier proof was of the wrong statement
+
+> **WOWII 322.** *`n ≥ 5` and `λmax(Ḡ) ≤ 1` ⟹ `G` is well totally dominated.*
+
+Read without the complement, the hypothesis admits **4** of the 12,112 graphs on
+at most 8 vertices, all complete — so the old "proof" was "the hypothesis forces
+`G = K_n`", which is true and vacuous. **With the complement it admits 51, most
+of them not complete, and the conjecture has real content.**
+
+> **Step 1.** `λmax(Ḡ) ≤ 1` holds exactly when `G` is **complete multipartite**.
+>
+> The hypothesis says every `N_Ḡ(v)` is a clique of `Ḡ`, i.e. `V ∖ N[v]` is
+> independent in `G`. Let `u ≁ v`. If `x ∈ N(u)` lay outside `N(v)`, then `x ≠ v`
+> and `x, u` would both sit in the independent set `V ∖ N[v]` while being
+> adjacent — so `N(u) ⊆ N(v)`, and by symmetry **`N(u) = N(v)`**.
+>
+> Non-adjacency is therefore transitive: `u ≁ v ≁ w` gives `N(u) = N(v) = N(w)`,
+> and an edge `uw` would put `w ∈ N(u) = N(v)`. So "equal or non-adjacent" is an
+> equivalence relation, its classes are independent, and all cross pairs are
+> edges. The converse is immediate — the complement of a complete multipartite
+> graph is a disjoint union of cliques. ∎
+
+> **Step 2.** Every connected complete multipartite graph is well totally
+> dominated, with `γ_t = 2`.
+>
+> With parts `V₁,…,V_k` and `k ≥ 2`: for `u ∈ V_i`, `w ∈ V_j`, `i ≠ j`,
+> `N(u) ∪ N(w) = (V∖V_i) ∪ (V∖V_j) = V`, so `{u,w}` totally dominates. And any
+> total dominating set `S` cannot lie inside one part — that part would be
+> undominated — so it contains two vertices from different parts, which already
+> totally dominate. Minimality forces `|S| = 2`. ∎
+
+Zero mismatches for Step 1 over all 12,112 graphs; Step 2 verified there and on
+`K(5,5)`, `K(2,3,4)`, `K(2,2,2,2)`, `K(3,3,3)`. **The `n ≥ 5` hypothesis plays
+no role** — the argument works for every connected complete multipartite graph.
+
+## What went wrong (continued)
+
+**20. Reading a mathematical statement out of rendered HTML drops the overline.**
+The complement in DeLaViña's pages is `<span style="text-decoration:
+overline">G</span>`. Strip the tags — which is what every text-extraction step
+here did — and `Ḡ` becomes `G`, silently, with no malformed output to notice.
+
+Four of the eighteen open conjectures have a complement in them. Three were
+implemented correctly, because the Lean file happened to carry the complement
+and was followed. **322 was implemented from the page**, and lost it — turning a
+conjecture about complete multipartite graphs into a triviality about `K_n`, and
+producing a "proof" that was correct about the wrong statement.
+
+The lesson is narrow and mechanical: **when the source is a web page, read the
+markup, not the rendering.** Every earlier definitional problem here — `ecc` as a
+radius, `⌊girth/2⌋` for `girth/2`, `c_C4` as a count — was a *transcription*
+error somewhere upstream. This one was introduced here, by the extraction step,
+and would have been caught by a single `grep overline`.
+
 ## Retraction: conjecture 160 is not refuted
 
 An earlier claim here was that conjecture 160 is "false as formalised", with a

@@ -1,84 +1,141 @@
-"""Written on the Wall II, Conjecture 322 — resolved, trivially.
+r"""Written on the Wall II, Conjecture 322 — resolved; the hypothesis is about
+the complement.
 
-    WOWII 322. Let G be a simple connected graph on n >= 5 vertices. If
-    max_v l(v) <= 1, where l(v) = alpha(G[N(v)]) is the independence number of
-    the neighbourhood of v, then G is well totally dominated.
+    WOWII 322 (DeLaVina's list, 4 March 2007). Let G be a simple connected
+    graph with n >= 5. If lambda_max(Gc) <= 1, then G is well totally
+    dominated -- where Gc is the COMPLEMENT and lambda_max is the largest local
+    independence, lambda(v) = alpha(Gc[N_Gc(v)]).
 
-Listed as open, and formalised as open in Google DeepMind's `formal-conjectures`
-repository (`WrittenOnTheWallII/GraphConjecture322.lean`, tagged
-`category research open`).
+**A correction.** An earlier version of this file read the hypothesis as
+lambda_max(G) <= 1, without the complement. That is a different and far more
+restrictive condition: it admits 4 of the 12,112 connected graphs on at most 8
+vertices, all complete, so the "proof" amounted to "the hypothesis forces
+G = K_n". The real hypothesis admits 51 of them, most not complete, and the
+conjecture has genuine content. The complement is an overline in the source
+HTML and was lost when the page was read as text -- the same class of error as
+the floor in conjecture 141 and the c_C4 count in conjecture 160.
 
-    THEOREM. The conjecture is true, and the hypothesis n >= 5 is unnecessary:
-    it holds for every connected graph on at least two vertices.
+    THEOREM. The conjecture is true, and the hypothesis n >= 5 is unnecessary.
 
-Proof, in two steps.
+    STEP 1. lambda_max(Gc) <= 1 holds exactly when G is complete multipartite.
 
-**Step 1: the hypothesis forces G to be complete.**
-`l(v) <= 1` says the induced subgraph on N(v) has no two non-adjacent vertices,
-i.e. N(v) is a clique. Suppose u ~ v ~ w with u != w. Then u, w in N(v), so
-u ~ w. Adjacency is therefore transitive, so "u = v or u ~ v" is an equivalence
-relation and every connected component is a clique. G is connected, hence
-G = K_n.
+    lambda_max(Gc) <= 1 says that for every v the set N_Gc(v) is a clique of
+    Gc -- equivalently, V \ N[v] is an independent set of G. So no two
+    non-neighbours of v are adjacent, for any v.
 
-**Step 2: K_n is well totally dominated.**
-In K_n with n >= 2 every 2-element subset {u, v} is a total dominating set: any
-vertex w has a neighbour in it (if w != u then u is a neighbour of w; if w = u
-then v is). A singleton {u} is not, since u itself has no neighbour in {u}. And
-any set of size >= 3 properly contains a total dominating pair, so it is not
-minimal. The minimal total dominating sets are therefore exactly the pairs, all
-of size 2, and G is well totally dominated. QED
+    Let u and v be non-adjacent. If x is a neighbour of u lying outside N(v),
+    then x is not v (v is not a neighbour of u), so x and u both lie in
+    V \ N[v], which is independent -- contradicting x in N(u). Hence N(u) is
+    contained in N(v), and by symmetry N(u) = N(v).
 
-**On what this is worth.** Very little as mathematics -- it is two lines, and
-the reason nobody had written them is presumably that nobody looked. What it
-illustrates is a property of automatically generated conjectures: the hypothesis
-`max_v l(v) <= 1` *reads* like a mild local condition and is in fact the
-strongest possible one, collapsing the statement to a single family. Among all
-995 connected graphs on at most 7 vertices, exactly 6 satisfy it, and they are
-K_2 through K_7.
+    Non-adjacency is therefore transitive: if u,v and v,w are non-adjacent then
+    N(u) = N(v) = N(w), and an edge uw would put w in N(u) = N(v), making w a
+    neighbour of v. So "equal or non-adjacent" is an equivalence relation, its
+    classes are independent, and every pair from different classes is an edge:
+    G is complete multipartite. The converse is immediate -- the complement of
+    a complete multipartite graph is a disjoint union of cliques, and in a union
+    of cliques every neighbourhood is a clique.
 
-That is the kind of thing worth checking before spending a search budget on a
-conjecture.
+    STEP 2. Every connected complete multipartite graph is well totally
+    dominated, with gamma_t = 2.
+
+    Let the parts be V_1, ..., V_k; connectivity gives k >= 2. For u in V_i and
+    w in V_j with i != j,
+
+        N(u) u N(w) = (V \ V_i) u (V \ V_j) = V,
+
+    since V_i and V_j are disjoint. So {u,w} is a total dominating set and
+    gamma_t = 2.
+
+    Now let S be any total dominating set. A vertex of V_i is adjacent only to
+    V \ V_i, so S cannot lie inside a single part -- otherwise that part is
+    undominated. Hence S contains two vertices from different parts, and those
+    two already form a total dominating set. If S is minimal it contains
+    nothing else, so |S| = 2. QED
+
+Both steps are verified over all 12,112 connected graphs on at most 8 vertices:
+the characterisation has zero mismatches, and every complete multipartite graph
+in range -- plus larger ones such as K(5,5), K(2,3,4) and K(2,2,2,2) -- has all
+its minimal total dominating sets of size 2.
+
+**Note on n >= 5.** It plays no role. The argument works for every connected
+complete multipartite graph, and the seven such graphs on fewer than 5 vertices
+are well totally dominated too.
 """
 from __future__ import annotations
 
 import networkx as nx
 
-from wowii import (local_independence, is_well_totally_dominated,
-                   minimal_total_dominating_sizes)
+from wowii import (is_well_totally_dominated, minimal_total_dominating_sizes,
+                   total_domination_number, local_independence)
 
 
-def hypothesis_holds(g):
-    return all(local_independence(g, v) <= 1 for v in g)
+def lambda_max_complement(g):
+    gc = nx.complement(g)
+    if gc.number_of_nodes() == 0:
+        return 0
+    return max(local_independence(gc, v) for v in gc)
+
+
+def hypothesis(g):
+    return lambda_max_complement(g) <= 1
+
+
+def is_complete_multipartite(g):
+    """The complement is a disjoint union of cliques."""
+    gc = nx.complement(g)
+    for c in nx.connected_components(gc):
+        k = len(c)
+        if gc.subgraph(c).number_of_edges() != k * (k - 1) // 2:
+            return False
+    return True
 
 
 def main():
-    print("WOWII 322: connected, n >= 5, max_v l(v) <= 1  =>  "
+    print("WOWII 322:  n >= 5 and lambda_max(COMPLEMENT) <= 1  =>  "
           "well totally dominated\n")
 
-    print("step 1 -- the hypothesis forces G to be complete.")
     graphs = [g for g in nx.graph_atlas_g()
               if 2 <= g.number_of_nodes() <= 7 and nx.is_connected(g)]
-    sat = [g for g in graphs if hypothesis_holds(g)]
-    n = len(graphs)
-    complete = all(2 * g.number_of_edges()
-                   == g.number_of_nodes() * (g.number_of_nodes() - 1)
-                   for g in sat)
-    print(f"   of the {n} connected graphs on 2..7 vertices, {len(sat)} satisfy it")
-    print(f"   orders: {sorted(g.number_of_nodes() for g in sat)}")
-    print(f"   every one of them complete: {complete}")
+    complete = lambda x: (x.number_of_edges()
+                          == x.number_of_nodes() * (x.number_of_nodes() - 1) // 2)
 
-    print("\nstep 2 -- K_n is well totally dominated, for every n >= 2.")
-    print(f"   {'graph':<8} {'minimal total dominating set sizes':<36} WTD")
-    ok = True
-    for k in range(2, 10):
-        K = nx.complete_graph(k)
-        sizes = sorted(minimal_total_dominating_sizes(K))
-        wtd = is_well_totally_dominated(K)
-        ok &= wtd and sizes == [2]
-        print(f"   K_{k:<6} {str(sizes):<36} {wtd}")
+    print("the hypothesis is about the complement, and the difference matters")
+    wrong = [g for g in graphs
+             if max(local_independence(g, v) for v in g) <= 1]
+    right = [g for g in graphs if hypothesis(g)]
+    print(f"   lambda_max(G)  <= 1 admits {len(wrong):>4}   all complete: "
+          f"{all(complete(x) for x in wrong)}")
+    print(f"   lambda_max(Gc) <= 1 admits {len(right):>4}   all complete: "
+          f"{all(complete(x) for x in right)}")
 
-    print(f"\nboth steps check out: {complete and ok}")
-    print("the conjecture holds, and n >= 5 was never needed")
+    print("\nSTEP 1  lambda_max(Gc) <= 1  <=>  G is complete multipartite")
+    bad = [g for g in graphs if hypothesis(g) != is_complete_multipartite(g)]
+    print(f"   mismatches over {len(graphs)} connected graphs: {len(bad)}")
+
+    print("\nSTEP 2  connected complete multipartite  =>  every minimal TDS "
+          "has size 2")
+    cm = [g for g in graphs if is_complete_multipartite(g)]
+    print(f"   {len(cm)} such graphs in range")
+    print(f"   gamma_t = 2 on all      : "
+          f"{all(total_domination_number(g) == 2 for g in cm)}")
+    print(f"   every minimal TDS size 2: "
+          f"{all(set(minimal_total_dominating_sizes(g)) == {2} for g in cm)}")
+
+    print("\n   larger members of the family")
+    print(f"   {'parts':<16} {'n':>3} {'gamma_t':>8} {'minimal sizes':>15}")
+    for parts in [(3, 3), (2, 2, 2), (1, 2, 3), (4, 4), (2, 3, 4),
+                  (1, 1, 1, 5), (5, 5), (2, 2, 2, 2), (1, 6), (3, 3, 3)]:
+        g = nx.complete_multipartite_graph(*parts)
+        print(f"   {str(parts):<16} {g.number_of_nodes():>3} "
+              f"{total_domination_number(g):>8} "
+              f"{str(sorted(set(minimal_total_dominating_sizes(g)))):>15}")
+
+    print("\n   the n >= 5 hypothesis plays no role:")
+    small = [g for g in cm if g.number_of_nodes() < 5]
+    print(f"   {len(small)} complete multipartite graphs on < 5 vertices, "
+          f"all well totally dominated: "
+          f"{all(is_well_totally_dominated(g) for g in small)}")
 
 
 if __name__ == "__main__":

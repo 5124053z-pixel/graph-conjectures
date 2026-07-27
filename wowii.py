@@ -145,10 +145,16 @@ def average_degree(g):
 # ---------------------------------------------------------------------------
 
 def conj_322(g):
-    """n >= 5 and l(v) <= 1 for every v  =>  G is well totally dominated."""
+    """n >= 5 and lambda_max(COMPLEMENT) <= 1  =>  well totally dominated.
+
+    The complement is an overline in the source HTML. Reading the statement as
+    lambda_max(G) <= 1 admits only complete graphs and makes the conjecture
+    trivial; the real hypothesis is equivalent to G being complete multipartite.
+    See wowii322.py."""
     if g.number_of_nodes() < 5:
         return False, True
-    if any(local_independence(g, v) > 1 for v in g):
+    gc = nx.complement(g)
+    if any(local_independence(gc, v) > 1 for v in gc):
         return False, True
     return True, is_well_totally_dominated(g)
 
@@ -171,9 +177,12 @@ def conj_314(g):
 
 
 def conj_141(g):
-    """tree(G) >= floor(girth/2) - 1 + max_v l(v)."""
+    """tree(G) >= (1/2)*girth - 1 + max_v l(v), as DeLaVina states it.
+
+    The Lean formalisation has floor(girth/2), which is strictly weaker at odd
+    girth. This tests the original. See wowii141.py."""
     girth = 0 if nx.is_forest(g) else nx.girth(g)
-    rhs = girth // 2 - 1 + max(local_independence(g, v) for v in g)
+    rhs = girth / 2 - 1 + max(local_independence(g, v) for v in g)
     return True, largest_induced_tree(g) >= rhs
 
 
