@@ -523,11 +523,12 @@ def has_c4_subgraph(g):
 def dist_min(g, S):
     """min pairwise distance between two distinct vertices of S. 0 if |S| < 2.
 
-    Corrected 2026-07-29 per Dr. DeLaVina directly: this was previously
+    Corrected 2026-07-29 after external review: this was previously
     implemented as "distance from S to the rest of the graph", which is a
-    different quantity and made conjecture 65 trivial by construction. Her
-    own example is P5: the minimum-degree set A = {endpoints} has pairwise
-    distance 4, not the distance-to-rest value of 1 the old code returned."""
+    different quantity and made conjecture 65 trivial by construction. The
+    example that caught it is P5: the minimum-degree set A = {endpoints} has
+    pairwise distance 4, not the distance-to-rest value of 1 the old code
+    returned."""
     S = list(S)
     if len(S) < 2:
         return 0

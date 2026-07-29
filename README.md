@@ -90,7 +90,7 @@ were resolved by others in the week before this check):
 
 | # | statement (short) | status |
 |---|---|---|
-| 65 | `distMin` bound | **open** — earlier "proved, trivial" used the wrong `distMin`; corrected per Dr. DeLaVina 29 Jul 2026, no longer trivial, no counterexample found in range |
+| 65 | `distMin` bound | **open** — earlier "proved, trivial" used the wrong `distMin`; corrected 29 Jul 2026 after external review, no longer trivial, no counterexample found in range |
 | 316 | avg-degree-of-complement bound ⟹ WTD | **proved** |
 | 322 | `λmax(Ḡ) ≤ 1` ⟹ WTD | **proved** (complete multipartite) |
 | 141 | girth/local-independence tree bound | **proved**, original (stronger) form |
@@ -126,13 +126,13 @@ mostly by reading source definitions and equality cases rather than by
 searching for counterexamples, which is also where most of the false starts
 live.
 
-**Dr. DeLaVina (the conjectures' original author) is now reviewing these
-results directly, one conjecture at a time, by email.** The first reply
-(29 Jul 2026) corrected conjecture 65 — a variable had been misread, and the
-"trivial" proof was of a different, easier statement. That correction is
-reflected above and in the log; more replies will land the same way. Until a
-conjecture has been confirmed by her, treat every "proved" claim here as
-this project's reading of the formal statement, not as author-verified.
+**These results are now under external review, one conjecture at a time.**
+The first round of feedback (29 Jul 2026) corrected conjecture 65 — a
+variable had been misread, and the "trivial" proof was of a different,
+easier statement. That correction is reflected above and in the log; more
+feedback will land the same way. Until a conjecture has been confirmed
+through that review, treat every "proved" claim here as this project's
+reading of the formal statement, not as independently verified.
 
 ## Where to look
 

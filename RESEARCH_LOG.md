@@ -1098,13 +1098,13 @@ Möbius–Kantor, Pappus, Desargues, `C₇`, `C₉`, `C₁₂`, `C₂₀`, grids
 
 ## Conjecture 65: the "trivial" proof was of the wrong invariant
 
-> ### ⚠ Retracted — wrong reading of `distMin`, per Dr. DeLaVina directly
+> ### ⚠ Retracted — wrong reading of `distMin`, caught by external review
 >
 > What follows was written as "true, trivially", from `distMin(S) := min over
 > v ∉ S of dist(v, S)`. **That is not the invariant the conjecture uses.**
-> DeLaVina, replying to this project directly (29 Jul 2026): `distMin(S)` is
-> the minimum *pairwise* distance between two distinct vertices **within**
-> `S` — the non-zero distances only. Her own example is `P₅`: the
+> Corrected via external review (29 Jul 2026): `distMin(S)` is the minimum
+> *pairwise* distance between two distinct vertices **within** `S` — the
+> non-zero distances only. The example that caught it is `P₅`: the
 > minimum-degree set `A` is the two endpoints, at distance 4 from each other,
 > not the distance-1-to-the-rest value the old reading gave. Under the
 > wrong reading the left-hand side was capped at 2 by construction, which is
@@ -1121,9 +1121,9 @@ Under the corrected definition this is no longer trivial — `distMin(A)` can
 be as large as the diameter, when the minimum-degree vertices sit far apart
 (as they do on a path). Re-checked over the 995 connected graphs on `≤ 7`
 vertices with the fixed `dist_min`: **zero violations, 37 graphs tight**
-(`P₅` included, where `4 + ⌈1/3⌉ = 5 = f(P₅)` exactly — DeLaVina's own
-example is itself a tight case, not slack). **Open** pending a proof or a
-larger search; not settled by the argument that used to be here.
+(`P₅` included, where `4 + ⌈1/3⌉ = 5 = f(P₅)` exactly — the example that
+caught the misreading is itself a tight case, not slack). **Open** pending a
+proof or a larger search; not settled by the argument that used to be here.
 
 ## Result: conjecture 316 is true
 
@@ -2044,7 +2044,7 @@ No counterexample at `n = 8`. This is verification, not evidence of much — the
 value is that it would have caught a transcription error, which is exactly how
 conjecture 160's Lean bug surfaced.
 
-**`#65`'s "holds 12112" here used the wrong `distMin`.** Per DeLaVina's
+**`#65`'s "holds 12112" here used the wrong `distMin`.** Per the external
 correction (29 Jul 2026, see below), `distMin(S)` is the minimum pairwise
 distance *within* `S`, not the distance from `S` to the rest of the graph.
 This 8-vertex run predates the fix and its number is not meaningful; the
@@ -3017,12 +3017,12 @@ conjecture.
 `distMin(S)` in conjecture 65 was read as "distance from `S` to the rest of
 the graph" — a reasonable guess, never checked against the source, that made
 every connected graph give `distMin ∈ {0, 1}` and the conjecture trivial by
-construction. **Dr. DeLaVina, replying to an email about this project's
-results, corrected it directly:** `distMin(S)` is the minimum pairwise
-distance *within* `S`. On her own example, `P₅`, the two readings give 1 and
-4 respectively — nothing in the range this project ever checked (`n ≤ 8`)
-could have told them apart, because both readings pass every graph in range
-under the wrong one's easy bound. See the retraction under conjecture 65.
+construction. **External review corrected it directly:** `distMin(S)` is the
+minimum pairwise distance *within* `S`. The example that caught it, `P₅`,
+gives 1 and 4 under the two readings respectively — nothing in the range
+this project ever checked (`n ≤ 8`) could have told them apart, because both
+readings pass every graph in range under the wrong one's easy bound. See the
+retraction under conjecture 65.
 
 This is failure **17** again, in the worst available costume: that one
 misread a formalised, machine-checked Lean statement, where at least the
