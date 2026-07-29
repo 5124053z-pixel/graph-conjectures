@@ -90,7 +90,7 @@ were resolved by others in the week before this check):
 
 | # | statement (short) | status |
 |---|---|---|
-| 65 | `distMin` bound | **proved**, trivial |
+| 65 | `distMin` bound | **open** — earlier "proved, trivial" used the wrong `distMin`; corrected per Dr. DeLaVina 29 Jul 2026, no longer trivial, no counterexample found in range |
 | 316 | avg-degree-of-complement bound ⟹ WTD | **proved** |
 | 322 | `λmax(Ḡ) ≤ 1` ⟹ WTD | **proved** (complete multipartite) |
 | 141 | girth/local-independence tree bound | **proved**, original (stronger) form |
@@ -110,11 +110,13 @@ were resolved by others in the week before this check):
 | 2 | leaves/local-independence bound | proved for triangle-free graphs; reduces to one open inequality otherwise |
 | 59 | forest/residue/bipartite bound | reduces to an AM–GM strengthening, proved in range |
 
-**Net: 5 conjectures proved outright here (65, 141, 314, 316, 322), several
+**Net: 4 conjectures proved outright here (141, 314, 316, 322), several
 more reduced to a single explicit inequality or a small finite residual, 2
 resolved by others in the same weeks (146, 200-as-false), 1 already resolved
-under a different label (198), and 291 independently confirmed false.** All
-verified over every connected graph up to 8 vertices (12,112 graphs,
+under a different label (198), and 291 independently confirmed false.** 65
+was briefly counted as a fifth proof but that rested on a misreading of
+`distMin`; see below. All the exhaustive claims (other than 65's, pending a
+rerun) are verified over every connected graph up to 8 vertices (12,112 graphs,
 count-checked against OEIS) via `wowii_toolkit.py` / `wowii_status.py`.
 
 Two genuine Lean-transcription bugs were found and reported upstream
@@ -123,6 +125,14 @@ this check confirmed it independently. See the log for how each was found —
 mostly by reading source definitions and equality cases rather than by
 searching for counterexamples, which is also where most of the false starts
 live.
+
+**Dr. DeLaVina (the conjectures' original author) is now reviewing these
+results directly, one conjecture at a time, by email.** The first reply
+(29 Jul 2026) corrected conjecture 65 — a variable had been misread, and the
+"trivial" proof was of a different, easier statement. That correction is
+reflected above and in the log; more replies will land the same way. Until a
+conjecture has been confirmed by her, treat every "proved" claim here as
+this project's reading of the formal statement, not as author-verified.
 
 ## Where to look
 

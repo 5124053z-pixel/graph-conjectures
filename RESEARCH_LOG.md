@@ -481,7 +481,7 @@ is left with over the 995 connected graphs on `≤ 7` vertices.
 
 | conj | how |
 |---|---|
-| **65** | `distMin` only takes `0` and `1` in a connected graph, so the RHS never exceeds 2 |
+| ~~**65**~~ | ~~`distMin` only takes `0` and `1` in a connected graph, so the RHS never exceeds 2~~ — **wrong reading of `distMin`; retracted, see below** |
 | **141** | neighbourhood star for `girth ≤ 5`, locally-tree-like ball for `girth ≥ 6` |
 | **316** | the hypothesis admits only complete graphs and `K₁,K₂,K₃` with pendants |
 | **160** | `G` has a `C₄`, or is `C₄`-free with one vertex attaining both maxima, or Theorem A applies — residual 11 |
@@ -1096,16 +1096,34 @@ statement. **The split point is forced**: Lemma A works exactly when
 lies between. Verified on all 995 graphs on `≤ 7` vertices and on Heawood,
 Möbius–Kantor, Pappus, Desargues, `C₇`, `C₉`, `C₁₂`, `C₂₀`, grids and `Q₄`.
 
-## Result: conjecture 65 is true, trivially
+## Conjecture 65: the "trivial" proof was of the wrong invariant
+
+> ### ⚠ Retracted — wrong reading of `distMin`, per Dr. DeLaVina directly
+>
+> What follows was written as "true, trivially", from `distMin(S) := min over
+> v ∉ S of dist(v, S)`. **That is not the invariant the conjecture uses.**
+> DeLaVina, replying to this project directly (29 Jul 2026): `distMin(S)` is
+> the minimum *pairwise* distance between two distinct vertices **within**
+> `S` — the non-zero distances only. Her own example is `P₅`: the
+> minimum-degree set `A` is the two endpoints, at distance 4 from each other,
+> not the distance-1-to-the-rest value the old reading gave. Under the
+> wrong reading the left-hand side was capped at 2 by construction, which is
+> exactly why it looked trivial — the reading manufactured the triviality.
+> `wowii.py`'s `dist_min` is corrected; see below for what the real
+> conjecture says.
 
 > **WOWII 65.** *`distMin(A) + ⌈distMin(M)/3⌉ ≤ f(G)`, with `A` the
-> minimum-degree vertices and `M` the maximum-degree ones.*
+> minimum-degree vertices, `M` the maximum-degree ones, and `distMin(S)` the
+> minimum pairwise distance between two distinct vertices of `S` (0 if
+> `|S| < 2`).*
 
-`distMin(S)` is the minimum over `v ∉ S` of `dist(v,S)`. In a **connected** graph
-any nonempty proper `S` has a vertex adjacent to it, so `distMin(S) = 1`; and
-`distMin(V) = 0`. It takes no other value. So the left-hand side is at most
-`1 + ⌈1/3⌉ = 2`, while `f(G) ≥ 2` for any graph with an edge. ∎ Over the 995
-graphs the left-hand side takes only the values `{0, 2}`.
+Under the corrected definition this is no longer trivial — `distMin(A)` can
+be as large as the diameter, when the minimum-degree vertices sit far apart
+(as they do on a path). Re-checked over the 995 connected graphs on `≤ 7`
+vertices with the fixed `dist_min`: **zero violations, 37 graphs tight**
+(`P₅` included, where `4 + ⌈1/3⌉ = 5 = f(P₅)` exactly — DeLaVina's own
+example is itself a tight case, not slack). **Open** pending a proof or a
+larger search; not settled by the argument that used to be here.
 
 ## Result: conjecture 316 is true
 
@@ -2026,6 +2044,13 @@ No counterexample at `n = 8`. This is verification, not evidence of much — the
 value is that it would have caught a transcription error, which is exactly how
 conjecture 160's Lean bug surfaced.
 
+**`#65`'s "holds 12112" here used the wrong `distMin`.** Per DeLaVina's
+correction (29 Jul 2026, see below), `distMin(S)` is the minimum pairwise
+distance *within* `S`, not the distance from `S` to the rest of the graph.
+This 8-vertex run predates the fix and its number is not meaningful; the
+corrected definition has only been checked to `n = 7` so far (37/995 tight,
+zero violations) — rerunning to `n = 8` is queued but not yet done.
+
 **`#200` and `#291` in this table are stale in the strongest possible sense.**
 Both later turned out to be false — `#200` at 11 vertices (Jitendra Prajapati,
 21 Jul 2026) and `#291` at 12 vertices (Zyad Tamimi, 23 Jul 2026); see
@@ -2673,7 +2698,7 @@ is not merely small, it is *below the scale at which these conjectures decide
 themselves*, and the counterexamples that exist were found by targeted search,
 not enumeration.
 
-So the realistic breakdown of the 22:
+So the realistic breakdown of the 22, **at the time this was written**:
 
 * **5 proved here** — 65, 141, 314, 316, 322. (160 is **not** refuted; only its
   Lean transcription is — see the retraction above.)
@@ -2685,6 +2710,14 @@ So the realistic breakdown of the 22:
 * **12 left.** Of those, six look reachable by finishing a case analysis, three
   are Hamiltonian-family statements that may well be false, and three (2, 59,
   145) need something new.
+
+> ### ⚠ 65 does not belong in "proved here" — see the retraction above
+>
+> "65 is trivial once read" was itself the misreading: the `distMin` used was
+> the wrong invariant, and DeLaVina's actual definition is not trivial (37 of
+> 995 graphs tight, none refuted, but no proof). Revised count: **4 proved
+> here** (141, 314, 316, 322), **13 left**, of which one (65) had been wrongly
+> filed as closed rather than genuinely being open.
 
 ### What I would do with the next hundred hours
 
@@ -2979,6 +3012,30 @@ different. Only reading the original found it.
 The gap turned out to be closable — see `wowii141.py` — so the result survives,
 stronger than before. But it was proved against a transcription, not against the
 conjecture.
+
+**22. A variable name was assumed to mean the obvious thing, and it did not.**
+`distMin(S)` in conjecture 65 was read as "distance from `S` to the rest of
+the graph" — a reasonable guess, never checked against the source, that made
+every connected graph give `distMin ∈ {0, 1}` and the conjecture trivial by
+construction. **Dr. DeLaVina, replying to an email about this project's
+results, corrected it directly:** `distMin(S)` is the minimum pairwise
+distance *within* `S`. On her own example, `P₅`, the two readings give 1 and
+4 respectively — nothing in the range this project ever checked (`n ≤ 8`)
+could have told them apart, because both readings pass every graph in range
+under the wrong one's easy bound. See the retraction under conjecture 65.
+
+This is failure **17** again, in the worst available costume: that one
+misread a formalised, machine-checked Lean statement, where at least the
+symbols were pinned down. This one misread a symbol in *prose*, on a
+conjecture with no formalisation at all, and the wrong reading was not just
+computationally indistinguishable from the right one in range — it made the
+conjecture look like something not worth double-checking, which is exactly
+the condition under which a misreading survives longest. The fix that keeps
+recurring across failures 11, 17 and 22: when a source is available to ask,
+ask it, and do not treat "the result came out clean" as evidence the reading
+was right. A trivial-looking conjecture on a curated list is a reason for
+more suspicion, not less — see failure 4's "these conjectures are seldom
+this easy" in reverse.
 
 ## Files
 
