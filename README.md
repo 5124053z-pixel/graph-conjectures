@@ -90,7 +90,7 @@ were resolved by others in the week before this check):
 
 | # | statement (short) | status |
 |---|---|---|
-| 65 | `distMin` bound | **open** — earlier "proved, trivial" used the wrong `distMin`; corrected 29 Jul 2026 after external review, no longer trivial, no counterexample found in range |
+| 65 | `distMin` bound | **open** — earlier "proved, trivial" used the wrong `distMin`; corrected 29 Jul 2026 after external review, no longer trivial, no counterexample found up to 8 vertices |
 | 316 | avg-degree-of-complement bound ⟹ WTD | **proved** |
 | 322 | `λmax(Ḡ) ≤ 1` ⟹ WTD | **proved** (complete multipartite) |
 | 141 | girth/local-independence tree bound | **proved**, original (stronger) form |
@@ -115,9 +115,9 @@ more reduced to a single explicit inequality or a small finite residual, 2
 resolved by others in the same weeks (146, 200-as-false), 1 already resolved
 under a different label (198), and 291 independently confirmed false.** 65
 was briefly counted as a fifth proof but that rested on a misreading of
-`distMin`; see below. All the exhaustive claims (other than 65's, pending a
-rerun) are verified over every connected graph up to 8 vertices (12,112 graphs,
-count-checked against OEIS) via `wowii_toolkit.py` / `wowii_status.py`.
+`distMin`; see below. All the exhaustive claims, including 65's corrected
+check, are verified over every connected graph up to 8 vertices (12,112
+graphs, count-checked against OEIS) via `wowii_toolkit.py` / `wowii_status.py`.
 
 Two genuine Lean-transcription bugs were found and reported upstream
 (conjectures 141, 322); a third (160) had already been fixed a day before

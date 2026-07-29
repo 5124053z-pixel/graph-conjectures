@@ -1119,11 +1119,12 @@ Möbius–Kantor, Pappus, Desargues, `C₇`, `C₉`, `C₁₂`, `C₂₀`, grids
 
 Under the corrected definition this is no longer trivial — `distMin(A)` can
 be as large as the diameter, when the minimum-degree vertices sit far apart
-(as they do on a path). Re-checked over the 995 connected graphs on `≤ 7`
-vertices with the fixed `dist_min`: **zero violations, 37 graphs tight**
-(`P₅` included, where `4 + ⌈1/3⌉ = 5 = f(P₅)` exactly — the example that
-caught the misreading is itself a tight case, not slack). **Open** pending a
-proof or a larger search; not settled by the argument that used to be here.
+(as they do on a path). Re-checked with the fixed `dist_min`: **zero
+violations** over the 995 connected graphs on `≤ 7` vertices (37 tight) and
+over all 12,112 connected graphs on `≤ 8` vertices (97 tight). `P₅` is among
+the tight cases, `4 + ⌈1/3⌉ = 5 = f(P₅)` exactly — the example that caught
+the misreading is itself a tight case, not slack. **Open** pending a proof
+or a larger search; not settled by the argument that used to be here.
 
 ## Result: conjecture 316 is true
 
@@ -2047,9 +2048,11 @@ conjecture 160's Lean bug surfaced.
 **`#65`'s "holds 12112" here used the wrong `distMin`.** Per the external
 correction (29 Jul 2026, see below), `distMin(S)` is the minimum pairwise
 distance *within* `S`, not the distance from `S` to the rest of the graph.
-This 8-vertex run predates the fix and its number is not meaningful; the
-corrected definition has only been checked to `n = 7` so far (37/995 tight,
-zero violations) — rerunning to `n = 8` is queued but not yet done.
+This 8-vertex run predates the fix and its number is not meaningful.
+Rerun with the corrected definition over all 12,112 connected graphs on
+`≤ 8` vertices: **zero violations, 97 tight** (up from 37/995 at `n ≤ 7`).
+Still open — a larger tight count is not a proof — but the correction holds
+up at the next order.
 
 **`#200` and `#291` in this table are stale in the strongest possible sense.**
 Both later turned out to be false — `#200` at 11 vertices (Jitendra Prajapati,
